@@ -11,7 +11,7 @@
 
 #include <iostream>
 #include <math.h>
-#include <SDL.h>
+#include <SDL/SDL.h>
 
 using namespace std;
 
