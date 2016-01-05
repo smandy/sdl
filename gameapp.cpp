@@ -57,7 +57,7 @@ void GameApp::handleResize( int width, int height) {
     glViewport(0, 0, width, height);
      
     glMatrixMode(GL_PROJECTION); //Switch to setting the camera perspective
-     
+
     //Set the camera perspective
     glLoadIdentity();      //Reset the camera
     gluPerspective(45.0,                  //The camera angle

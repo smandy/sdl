@@ -163,6 +163,7 @@ int main(int argc, char** argv) {
 	degreeOffset -= 0.01;
       };
 
+
       if ( event.key.keysym.sym == SDLK_UP ) {
 	// Prevent going above one!!!
 	float newFract = lengthFraction + 0.0015;
@@ -178,6 +179,7 @@ int main(int argc, char** argv) {
     }
 
     drawScene( degreeOffset, lengthFraction);
+
   }
   SDL_Quit();
   return 0; //This line is never reached

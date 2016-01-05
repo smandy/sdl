@@ -19,15 +19,25 @@
 #include "gameapp.hpp"
 #include "myHandler.hpp"
 
+
+struct MyStruct {
+    std::string s;
+    int x;
+
+    void doit() {
+        std::cout << "Woot" << std::endl;
+    };
+};
+
+
 using namespace std;
 
 int main(int argc, char** argv) {
     int done;
-  
+    
     GameApp   app(640, 480);
     MyHandler eventHandler(2.0f, 0.98);
-  
+
     eventHandler.mainLoop();
-    
     return 0; //This line is never reached
 }

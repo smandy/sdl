@@ -40,12 +40,12 @@ void MyHandler::drawScene(){
 }
 
 void MyHandler::onKeyDown( SDL_Event& evt) {
-    std::cout << "OnKeyPress" << evt.key.keysym.unicode << std::endl;
+    std::cout << "OnKeyPress : <" << SDL_GetKeyName( evt.key.keysym.sym) << ">" << std::endl;
     keyDown = true;
 };
 
 void MyHandler::onKeyUp( SDL_Event& evt) {
-    std::cout << "OnKeyUp" << evt.key.keysym.unicode << std::endl;
+    std::cout << "OnKeyUp : <" << SDL_GetKeyName( evt.key.keysym.sym) << ">" << std::endl;
     keyDown = false;
 };
 
