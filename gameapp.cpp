@@ -23,15 +23,19 @@ void GameApp::InitSDL() {
         exit(1);
     }
 
-    /* Create a 640x480 OpenGL screen */
-    if ( SDL_SetVideoMode(640, 480, 0, SDL_OPENGL) == NULL ) {
-        fprintf(stderr, "Unable to create OpenGL screen: %s\n", SDL_GetError());
-        SDL_Quit();
-        exit(2);
-    }
+     window = SDL_CreateWindow("My Game Window",
+                               SDL_WINDOWPOS_UNDEFINED,
+                               SDL_WINDOWPOS_UNDEFINED,
+                               600 ,
+                               400,
+                               SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL);
+
+     renderer = SDL_CreateRenderer(window, -1, 0);
+
+    
 
     /* Set the title bar in environments that support it */
-    SDL_WM_SetCaption("Vortex", NULL);
+    //SDL_WM_SetCaption("Vortex", NULL);
 };
 
 void GameApp::InitGL(int Width, int Height) {

@@ -1,7 +1,7 @@
-env = Environment(LIBS=['SDLmain', 'SDL', 'SDL_mixer', 'GL','GLU','glut'], 
+env = Environment(LIBS=['SDLmain', 'SDL2', 'SDL2_mixer', 'SDL2_ttf', 'GL','GLU','glut'], 
     CPPFLAGS=['-std=c++0x'],
                   LIBPATH = ['/usr/lib/x86_64-linux-gnu'],
-                  CPPPATH=['/usr/include/SDL'])
+                  CPPPATH=['/usr/include/SDL2'])
 
 env.Program('helloWorld.cpp')
 env.Program('tutorial.cpp')

@@ -19,7 +19,6 @@
 #include "gameapp.hpp"
 #include "myHandler.hpp"
 
-
 struct MyStruct {
     std::string s;
     int x;
@@ -28,7 +27,6 @@ struct MyStruct {
         std::cout << "Woot" << std::endl;
     };
 };
-
 
 using namespace std;
 
