@@ -62,10 +62,20 @@ void MyHandler::drawScene() {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
 
-  std::vector<int> xs;
-  std::vector<int> ys;
-  // auto buf = "BananaRama!!!";
-
+  std::array<SDL_Point,2> lines;
+  
+  SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+  for (int j = 40;j<500;j += 30) {
+      lines[0].x = 10;
+      lines[0].y = j;
+      lines[1].x = 300;
+      lines[1].y = j + 100;
+      //std::cout << lines[0] << std::endl;
+      SDL_RenderDrawLines(renderer, lines.data(), 2);
+      // TODO - pimp up lavavej to do std::arrays?
+      //print_line(std::cout, lines);
+  }
+  
   for (const auto &x : { 10, 300 }) {
     for (int y = 0; y < 600; y += 20) {
       std::ostringstream oss;
@@ -84,7 +94,6 @@ void MyHandler::drawScene() {
       auto h = surf2->h;
       auto w = surf2->w;
       // std::cout << "h=" << h << " w=" << w << "buf=" << buf << "\n";
-
       // std::cout << "App width=" << GameApp::instance->width << " h=" <<
       // GameApp::instance->height << std::endl;
       // std::cout << oss.str() << std::endl;
