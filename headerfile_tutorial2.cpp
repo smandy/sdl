@@ -2,29 +2,39 @@
 #include <iostream>
 #include "SDL_ttf.h"
 
-// This guys tutorials -> http://headerphile.com/
+#include <sstream>
+
+constexpr int sizeX = 1200;
+constexpr int sizeY = 600;
 
 struct Context {
 
   SDL_Renderer *renderer;
   SDL_Window *window;
 
-  int x;
-  int y;
+  float x;
+  float y;
 };
 
+template<typename T>
+struct TD;
+
+
 void cb(void *p) {
-  static decltype(TTF_OpenFont("foo", 10)) font;
+  static TTF_Font* font;
+
+  //TD<decltype(TTF_OpenFont("foo", 10))> fooType;
+  
   auto ctx = reinterpret_cast<Context *>(p);
   // std::cout << "TImer x=" << ctx->x << " y=" << ctx->y << "\n";
-  SDL_SetRenderDrawColor(ctx->renderer, 0, 0, 0, 255);
+  SDL_SetRenderDrawColor(ctx->renderer, 0, 0, 0, 128);
   SDL_RenderClear(ctx->renderer);
 
   SDL_Color c{ 255, 255, 255, 255 };
 
   if (font == nullptr) {
     font = TTF_OpenFont(
-        "/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf", 24);
+        "/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf", 12);
     if (!font) {
       printf("TTF_OpenFont: %s\n", TTF_GetError());
       // handle error
@@ -32,30 +42,66 @@ void cb(void *p) {
     std::cout << "Have set font " << font << std::endl;
   }
 
-  auto surf2 = TTF_RenderText_Solid(font, "Woot", c);
-  if (!surf2) {
-    printf("TTF_RenderText: %s\n", TTF_GetError());
+  static int calls = 0;
+  static decltype(SDL_GetTicks()) numTicks;
+  static std::stringstream oss;
+  static bool firstPass = true;
+
+  auto thisTicks = SDL_GetTicks();
+  if (!firstPass) {
+    auto diffTicks = (thisTicks - numTicks);
+    auto fps = 1000.0 / diffTicks;
+    oss.str("");
+    oss.clear();
+    oss << "Woot " << calls++ << " diffticks=" << diffTicks
+        << " ticks=" << thisTicks << " fps=" << fps
+        << " ms=" << diffTicks;
+  } else {
+    firstPass = false;
+  };
+  numTicks = thisTicks;
+
+  static float dx = 3.0;
+  static float dy = 3.0;
+
+  if (oss.str().size()) {
+    auto surf2 = TTF_RenderText_Solid(font, oss.str().c_str(), c);
+    if (!surf2) {
+      printf("TTF_RenderText: %s\n", TTF_GetError());
+    }
+
+    auto texture = SDL_CreateTextureFromSurface(ctx->renderer, surf2);
+    if (!texture) {
+      printf("SDL_CreateTexturefromsurface: %s\n", SDL_GetError());
+    };
+
+    auto h = surf2->h;
+    auto w = surf2->w;
+
+    SDL_FreeSurface(surf2);
+    SDL_Rect dest = { 20, 20, w, h };
+    SDL_RenderCopy(ctx->renderer, texture, nullptr, &dest);
+    SDL_DestroyTexture(texture);
   }
 
-  auto texture = SDL_CreateTextureFromSurface(ctx->renderer, surf2);
-  if (!texture) {
-    printf("SDL_CreateTexturefromsurface: %s\n", SDL_GetError());
-  };
-  auto h = surf2->h;
-  auto w = surf2->w;
-  SDL_FreeSurface(surf2);
-  SDL_Rect dest = { 20, 20, w, h };
-  SDL_RenderCopy(ctx->renderer, texture, nullptr, &dest);
-  SDL_DestroyTexture(texture);
-
   // SDL_RenderClear( ctx->renderer );
-  SDL_Rect r{ ctx->x, ctx->y, 25, 25 };
+  SDL_Rect r{
+    static_cast<int32_t>(ctx->x), static_cast<int32_t>(ctx->y), 25, 25
+  };
   SDL_SetRenderDrawColor(ctx->renderer, 255, 255, 255, 255);
   SDL_RenderDrawRect(ctx->renderer, &r);
   // Render the changes above ( which up until now had just happened behind the
   // scenes )
-  ctx->x += 1;
-  ctx->y += 1;
+  ctx->x += dx;
+  ctx->y += dy;
+
+  if (ctx->x > (sizeX-30) || ctx->x <= 0) {
+    dx = -dx;
+  }
+
+  if (ctx->y > (sizeY-30) || ctx->y <= 0) {
+    dy = -dy;
+  }
 
   // std::cout << SDL_GetThreadName() << std::endl;
   SDL_RenderPresent(ctx->renderer);
@@ -84,8 +130,6 @@ uint32_t cb2(uint32_t currentInterval, void *p) {
 int main(int argc, char *args[]) {
   int posX = 100;
   int posY = 200;
-  int sizeX = 800;
-  int sizeY = 600;
   SDL_Window *window;
   SDL_Renderer *renderer;
 
@@ -98,7 +142,6 @@ int main(int argc, char *args[]) {
   }
 
   TTF_Init();
-  
 
   // Create and init the window
   // ==========================================================
@@ -141,11 +184,11 @@ int main(int argc, char *args[]) {
   // Pause program so that the window doesn't disappear at once.
   // This willpause for 4000 milliseconds which is the same as 4 seconds
 
-  Context ctx = { renderer, window, 20, 20 };
+  Context ctx = { renderer, window, 200, 200 };
 
-  auto x = SDL_AddTimer(25, &cb2, &ctx);
+  auto x = SDL_AddTimer(20, &cb2, &ctx);
 
-  std::cout << "Timer id is " << x << "\n";
+  // std::cout << "Timer id is " << x<< "\n";
   // SDL_Delay( 4000 );
 
   // std::cout << SDL_GetThreadName(SDL_Thread * thread) SDL_Event event;
@@ -153,6 +196,7 @@ int main(int argc, char *args[]) {
   SDL_Event event;
   bool done = false;
   while (!done) {
+
     while (SDL_PollEvent(&event)) {
       switch (event.type) {
       case SDL_KEYDOWN: {
@@ -167,7 +211,8 @@ int main(int argc, char *args[]) {
         /* and now we can call the function we wanted to call in the timer but
          * couldn't because of the multithreading problems */
         auto p = (void (*)(void *))event.user.data1;
-        p(event.user.data2);
+        // p(event.user.data2);
+        cb(&ctx);
         break;
       }
       case SDL_QUIT: {
