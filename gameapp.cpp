@@ -1,6 +1,7 @@
 #include "gameapp.hpp"
 
 #include "SDL/SDL.h"
+#include "SDL/SDL_ttf.h"
 #include <GL/glut.h>
 #include <iostream>
 
@@ -8,6 +9,7 @@ GameApp::GameApp(int _width,
                  int _height) : width(_width), height(_height) {
     InitSDL();
     InitGL(width, height);
+    TTF_Init();
 };
 
 
@@ -17,6 +19,7 @@ GameApp::~GameApp() {
 };
 
 void GameApp::InitSDL() {
+    std::cout << "InitSDL" << "\n";
     /* Initialize SDL for video output */
     if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
         fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
@@ -28,12 +31,10 @@ void GameApp::InitSDL() {
                                SDL_WINDOWPOS_UNDEFINED,
                                600 ,
                                400,
-                               SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL);
+                               SDL_WINDOW_OPENGL);
 
      renderer = SDL_CreateRenderer(window, -1, 0);
-
-    
-
+     std::cout << "Renderere is " << renderer << "\n";
     /* Set the title bar in environments that support it */
     //SDL_WM_SetCaption("Vortex", NULL);
 };

@@ -1,3 +1,7 @@
+
+// Dodgy tutorial - based on SDL 1 should really be preferring 2 from here
+// on in.
+
 // http://www.youtube.com/watch?v=FPA5-1kTRtI
 #include <SDL.h>
 

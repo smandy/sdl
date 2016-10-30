@@ -7,9 +7,10 @@ class GameApp {
     int width, height;
 
     SDL_Window* window;
-    SDL_Renderer* renderer;
     
 public:
+    SDL_Renderer* renderer;
+    
     GameApp(int width, int height);
 
     ~GameApp();

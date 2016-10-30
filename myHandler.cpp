@@ -20,11 +20,12 @@
 #include "ScopeUtils.h"
 
 void MyHandler::drawScene(){
+    //std::cout << "drawscene" << "\n";
     //Clear information from last draw
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
     glLoadIdentity(); //Reset the drawing perspective
-
+    
     // glBegin( GL_LINE_STRIP );
     // glVertex3f( -1.0f, -1.0f, -5.0f);
     // glVertex3f(  1.0f, -1.0f, -5.0f);
@@ -32,40 +33,47 @@ void MyHandler::drawScene(){
     // glVertex3f( -1.0f,  1.0f, -5.0f);
     // glVertex3f( -1.0f, -1.0f, -5.0f);
     // glEnd();
-
-    glBegin( GL_LINE_STRIP );
-    drawVortex(degreeOffset, lengthFraction);
-    glEnd();
-    drawPlayer();
-
-
-  if (font==nullptr) {
-    font = TTF_OpenFont("/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf", 14);
-  }
-  static SDL_Renderer *renderer;
-  auto buf = "woot";
-
-  static SDL_Color cyan  = { 0   , 255 , 255 };
-  static SDL_Color red   = { 255 ,   0 ,   0 };
-  static SDL_Color green = { 0   , 255 ,   0 };
-  SDL_RenderClear(renderer);
-  
-  auto surf2 = TTF_RenderText_Solid(font, buf, cyan);
-  OnScopeExit s(
-      [&]() { SDL_FreeSurface(surf2); });
-
-  auto texture = SDL_CreateTextureFromSurface(renderer, surf2);
-
-  //scope(exit) SDL_FreeSurface( surf2);
-  // myRect.x = cast(short)  0;
-  // myRect.y = cast(short)  h;
-  // myRect.w = cast(ushort) surf2.w;
-  // myRect.h = cast(ushort) surf2.h;
-  // h += surf2.h;
-  // auto surface = TTF_RenderText_Solid(font, buf.ptr, cyan);
-  // scope(exit) SDL_FreeSurface(surface);
-  
-  SDL_RenderPresent(renderer);
+    //glBegin( GL_LINE_STRIP );
+    //drawVortex(degreeOffset, lengthFraction);
+    //glEnd();
+    //drawPlayer();
+    if (font==nullptr) {
+        font = TTF_OpenFont("/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf", 14);
+        if(!font) {
+            printf("TTF_OpenFont: %s\n", TTF_GetError());
+            // handle error
+        };
+        std::cout << "Have set font " << font << std::endl;
+    }
+    auto buf = "woot";
+    
+    static SDL_Color cyan  = { 0   , 255 , 255 };
+    static SDL_Color red   = { 255 ,   0 ,   0 };
+    static SDL_Color green = { 0   , 255 ,   0 };
+    
+    SDL_RenderClear(renderer);
+    if (true) {
+        //SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255);
+        SDL_Color textColor = { 255, 255, 255, 0 };
+        auto surf2 = TTF_RenderText_Solid(font, buf, textColor);
+        auto texture = SDL_CreateTextureFromSurface(renderer, surf2);
+        auto h = surf2->h;
+        auto w = surf2->w;
+        SDL_FreeSurface(surf2);
+        SDL_Rect dest = { 100, 100, w, h};
+        SDL_RenderCopy(renderer, texture, nullptr, &dest);
+        SDL_DestroyTexture(texture);
+    }
+    //scope(exit) SDL_FreeSurface( surf2);
+    // myRect.x = cast(short)  0;
+    // myRect.y = cast(short)  h;
+    // myRect.w = cast(ushort) surf2.w;
+    // myRect.h = cast(ushort) surf2.h;
+    // h += surf2.h;
+    // auto surface = TTF_RenderText_Solid(font, buf.ptr, cyan);
+    // scope(exit) SDL_FreeSurface(surface);
+    
+    SDL_RenderPresent(renderer);
 }
 
 void MyHandler::drawPlayer() {

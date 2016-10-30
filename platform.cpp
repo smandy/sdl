@@ -34,8 +34,9 @@ int main(int argc, char** argv) {
     int done;
     
     GameApp   app(640, 480);
-    MyHandler eventHandler(2.0f, 0.98);
-
+    MyHandler eventHandler(app.renderer, 2.0f, 0.98);
+    std::cout << "Enter mainloop" << std::endl;
     eventHandler.mainLoop();
+    std::cout << "Exit mainloop" << std::endl;
     return 0; //This line is never reached
 }

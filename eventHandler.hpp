@@ -6,9 +6,11 @@ class EventHandler {
 
 protected:
     bool running;
-
+    
 public:
-    EventHandler();
+    SDL_Renderer* renderer;
+    
+    EventHandler(SDL_Renderer* renderer);
 
     void onEvent( SDL_Event *event);
 

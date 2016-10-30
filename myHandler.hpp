@@ -20,9 +20,11 @@ class MyHandler : public EventHandler {
     TTF_Font* font  = nullptr;
     
 public:
-    MyHandler( float _degreeOffset ,
-               float _lengthFraction )  : degreeOffset(_degreeOffset),
-                                          lengthFraction(_lengthFraction) {}
+    MyHandler( SDL_Renderer* _renderer,
+               float _degreeOffset ,
+               float _lengthFraction)  : EventHandler(_renderer),
+                                         degreeOffset(_degreeOffset),
+                                         lengthFraction(_lengthFraction) {}
     virtual void onKeyDown(SDL_Event& event);
     
     virtual void onKeyUp(SDL_Event& event);

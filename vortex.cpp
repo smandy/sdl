@@ -76,6 +76,7 @@ struct Mousey {
   inline float getX() {
     return x;
   };
+    
   inline float getY() {
     return y;
   };
