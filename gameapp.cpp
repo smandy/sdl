@@ -9,7 +9,7 @@ GameApp::GameApp(int _width,
                  int _height) : width(_width),
                                 height(_height) {
     InitSDL();
-    InitGL();
+    //InitGL(); - initting GL Seems to kill TTF!
     TTF_Init();
     instance = this;
 };
@@ -27,14 +27,12 @@ void GameApp::InitSDL() {
         fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
         exit(1);
     }
-
      window = SDL_CreateWindow("My Game Window",
                                SDL_WINDOWPOS_UNDEFINED,
                                SDL_WINDOWPOS_UNDEFINED,
                                width ,
                                height,
                                SDL_WINDOW_OPENGL);
-
      renderer = SDL_CreateRenderer(window, -1, 0);
      std::cout << "Renderere is " << renderer << "\n";
     /* Set the title bar in environments that support it */
