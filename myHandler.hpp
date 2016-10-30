@@ -16,7 +16,7 @@ class MyHandler : public EventHandler {
     PlayerState state;
     uint32_t x = 50;
     uint32_t y = 10;
-
+    
     TTF_Font* font  = nullptr;
     
 public:

@@ -1,5 +1,5 @@
 env = Environment(LIBS=['SDLmain', 'SDL2', 'SDL2_mixer', 'SDL2_ttf', 'GL','GLU','glut'], 
-    CPPFLAGS=['-std=c++0x', '-g'],
+    CPPFLAGS=['-std=c++1y', '-g'],
                   LIBPATH = ['/usr/lib/x86_64-linux-gnu'],
                   CPPPATH=['/usr/include/SDL2'])
 

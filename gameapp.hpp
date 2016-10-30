@@ -4,11 +4,14 @@
 
 class GameApp {
     
-    int width, height;
 
     SDL_Window* window;
     
 public:
+    int width, height;
+    
+    static GameApp* instance;
+    
     SDL_Renderer* renderer;
     
     GameApp(int width, int height);
@@ -17,7 +20,7 @@ public:
     
     void InitSDL();
     
-    void InitGL(int width, int height);
+    void InitGL();
 
     void handleResize(int width, int height);
 
