@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <iostream>
+#include "SDL_ttf.h"
 
 // This guys tutorials -> http://headerphile.com/
 
@@ -13,10 +14,40 @@ struct Context {
 };
 
 void cb(void *p) {
+  static decltype(TTF_OpenFont("foo", 10)) font;
   auto ctx = reinterpret_cast<Context *>(p);
-  //std::cout << "TImer x=" << ctx->x << " y=" << ctx->y << "\n";
-  SDL_SetRenderDrawColor(ctx->renderer, 0,0,0, 255);
+  // std::cout << "TImer x=" << ctx->x << " y=" << ctx->y << "\n";
+  SDL_SetRenderDrawColor(ctx->renderer, 0, 0, 0, 255);
   SDL_RenderClear(ctx->renderer);
+
+  SDL_Color c{ 255, 255, 255, 255 };
+
+  if (font == nullptr) {
+    font = TTF_OpenFont(
+        "/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf", 24);
+    if (!font) {
+      printf("TTF_OpenFont: %s\n", TTF_GetError());
+      // handle error
+    };
+    std::cout << "Have set font " << font << std::endl;
+  }
+
+  auto surf2 = TTF_RenderText_Solid(font, "Woot", c);
+  if (!surf2) {
+    printf("TTF_RenderText: %s\n", TTF_GetError());
+  }
+
+  auto texture = SDL_CreateTextureFromSurface(ctx->renderer, surf2);
+  if (!texture) {
+    printf("SDL_CreateTexturefromsurface: %s\n", SDL_GetError());
+  };
+  auto h = surf2->h;
+  auto w = surf2->w;
+  SDL_FreeSurface(surf2);
+  SDL_Rect dest = { 20, 20, w, h };
+  SDL_RenderCopy(ctx->renderer, texture, nullptr, &dest);
+  SDL_DestroyTexture(texture);
+
   // SDL_RenderClear( ctx->renderer );
   SDL_Rect r{ ctx->x, ctx->y, 25, 25 };
   SDL_SetRenderDrawColor(ctx->renderer, 255, 255, 255, 255);
@@ -65,6 +96,9 @@ int main(int argc, char *args[]) {
     std::cout << " Failed to initialize SDL : " << SDL_GetError() << std::endl;
     return -1;
   }
+
+  TTF_Init();
+  
 
   // Create and init the window
   // ==========================================================
@@ -122,23 +156,23 @@ int main(int argc, char *args[]) {
     while (SDL_PollEvent(&event)) {
       switch (event.type) {
       case SDL_KEYDOWN: {
-          switch( event.key.keysym.sym) {
-          case SDLK_ESCAPE:
-              done = 1;
-              break;
-          }
+        switch (event.key.keysym.sym) {
+        case SDLK_ESCAPE:
+          done = 1;
           break;
+        }
+        break;
       };
       case SDL_USEREVENT: {
-          /* and now we can call the function we wanted to call in the timer but
-           * couldn't because of the multithreading problems */
-          auto p = (void (*)(void *))event.user.data1;
-          p(event.user.data2);
-          break;
+        /* and now we can call the function we wanted to call in the timer but
+         * couldn't because of the multithreading problems */
+        auto p = (void (*)(void *))event.user.data1;
+        p(event.user.data2);
+        break;
       }
       case SDL_QUIT: {
-          done = true;
-          break;
+        done = true;
+        break;
       }
       }
       /* ... */
