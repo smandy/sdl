@@ -13,6 +13,8 @@ if 1:
     gameApp      = env.Object( 'gameapp.cpp')
     eventHandler = env.Object( 'eventHandler.cpp')
     myHandler    = env.Object( 'myHandler.cpp')
+    headerfile    = env.Program( 'headerfile_tutorial.cpp')
+    headerfile2    = env.Program( 'headerfile_tutorial2.cpp')
     
     env.Program('platform', ['platform.cpp', gameApp, myHandler, eventHandler])
     #env.Program('pickSticks.cpp')
