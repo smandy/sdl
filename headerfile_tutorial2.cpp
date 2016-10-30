@@ -1,6 +1,8 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 
+// This guys tutorials -> http://headerphile.com/
+
 struct Context {
 
   SDL_Renderer *renderer;
