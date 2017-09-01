@@ -3,7 +3,7 @@
 #include <iostream>
 #include <stdlib.h> //Needed for "exit" function
 
-#include "mousey.hpp"
+#include "mousey.h"
 // Include OpenGL header files, so that we can use OpenGL
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
@@ -23,6 +23,7 @@
 #include <sstream>
 #include <vector>
 #include "gameapp.hpp"
+#include "mousey.h"
 
 void MyHandler::drawScene() {
   // std::cout << "drawscene" << "\n";

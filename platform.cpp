@@ -15,7 +15,7 @@
 
 #include "eventHandler.hpp"
 
-#include "mousey.hpp"
+#include "mousey.h"
 #include "gameapp.hpp"
 #include "myHandler.hpp"
 
