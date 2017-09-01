@@ -1,0 +1,14 @@
+env = Environment(LIBS=['SDLmain', 'SDL2'] ,
+    CPPFLAGS=['-std=c++1y', '-g'],
+                  LIBPATH = ['/usr/lib/x86_64-linux-gnu'],
+                  CPPPATH=['/usr/include/SDL2'])
+
+well = env.Object('well.cpp')
+game = env.Object('game.cpp')
+tetronimo = env.Object('tetronimo.cpp')
+
+main = env.Program('main' , ['main.cpp',well, game, tetronimo])
+
+
+
+

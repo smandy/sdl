@@ -14,3 +14,8 @@ i
 /platform
 /headerfile_tutorial
 /headerfile_tutorial2
+*.o
+**.o
+*.o
+/tetris/main
+**/.sconsign.dblite
