@@ -47,7 +47,7 @@ void MyHandler::drawScene() {
   // drawPlayer();
   if (font == nullptr) {
     font = TTF_OpenFont(
-        "/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf", 24);
+        "/usr/share/fonts/TTF/LiberationMono-Regular.ttf", 24);
     if (!font) {
       printf("TTF_OpenFont: %s\n", TTF_GetError());
       // handle error

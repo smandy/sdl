@@ -12,6 +12,7 @@
 #include <iostream>
 #include <math.h>
 #include <SDL.h>
+#include <vector>
 
 using namespace std;
 
@@ -83,40 +84,23 @@ struct Mousey {
 };
 
 void drawVortex(SDL_Renderer* renderer, float degreeOffset, float lengthFraction) {
-  float l = 2.0;
-  Mousey m(-1.0f, -1.0f);
+  std::vector<SDL_Point> myVec;
+  float l = 1000;
+  Mousey m(0,0);
   while (l > 0.05) {
-    glVertex3f(m.getX(), m.getY(), -3.0f);
-    m.move(l);
-    m.turn(Mousey::HALF_PI + degreeOffset * Mousey::DEGREE);
-    l *= lengthFraction;
+      myVec.push_back( { (int)m.getX(), (int)m.getY() });
+      m.move(l);
+      m.turn(Mousey::HALF_PI + degreeOffset * Mousey::DEGREE);
+      l *= lengthFraction;
   };
+  SDL_RenderDrawLines(renderer, myVec.data(), myVec.size());
 };
 
 void drawScene(SDL_Renderer *renderer, float degreeOffset, float lengthFraction) {
-  // Clear information from last draw
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  glMatrixMode(GL_MODELVIEW); // Switch to the drawing perspective
-  glLoadIdentity(); // Reset the drawing perspective
-
-  glBegin(GL_LINE_STRIP);
-
-  glVertex3f(-1.0f, -1.0f, -5.0f);
-  glVertex3f(1.0f, -1.0f, -5.0f);
-  glVertex3f(1.0f, 1.0f, -5.0f);
-  glVertex3f(-1.0f, 1.0f, -5.0f);
-  glVertex3f(-1.0f, -1.0f, -5.0f);
-
-  glEnd();
-
-  glBegin(GL_LINE_STRIP);
-  drawVortex(renderer,degreeOffset, lengthFraction);
-  glEnd();
-
-  // cout << "Drawing scene " << endl;
-
-  //SDL_GL_SwapBuffers(); // Send the 3D scene to the screen
+  SDL_SetRenderDrawColor( renderer, 0, 0, 0, 0);
+  SDL_RenderClear(renderer);
+  SDL_SetRenderDrawColor( renderer, 0, 255, 255, 255);
+  drawVortex(renderer, degreeOffset, lengthFraction);
   SDL_RenderPresent(renderer);
 }
 int main(int argc, char **argv) {
@@ -128,17 +112,19 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  auto window = SDL_CreateWindow("My Game Window", SDL_WINDOWPOS_UNDEFINED,
-                                 SDL_WINDOWPOS_UNDEFINED, 600, 400,
-                                 SDL_WINDOW_OPENGL);
+  auto window = SDL_CreateWindow("Vortex", SDL_WINDOWPOS_CENTERED,
+                                 SDL_WINDOWPOS_CENTERED, 1000, 1000,
+                                 SDL_WINDOW_SHOWN);
 
-  auto renderer = SDL_CreateRenderer(window, -1, 0);
+  auto renderer = SDL_CreateRenderer(window,
+                                     -1,
+                                     SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
   /* Set the title bar in environments that support it */
   // SDL_WM_SetCaption("Vortex", NULL);
 
   /* Loop, drawing and checking events */
-  InitGL(640, 480);
+  //  InitGL(640, 480);
 
   // drawScene();
   done = 0;
@@ -148,9 +134,8 @@ int main(int argc, char **argv) {
   bool keyDown = false;
   while (!done) {
     SDL_Event event;
-    
     drawScene(renderer, degreeOffset, lengthFraction);
-    typedef decltype(event.type) lastEvexnt;
+    typedef decltype(event.type) lastEvent;
 
     int haveEvent = SDL_PollEvent(&event);
     // cout << "Event !!" << event.type << endl;
@@ -168,8 +153,8 @@ int main(int argc, char **argv) {
         case SDLK_UP: {
             float newFract = lengthFraction + 0.0005;
             lengthFraction = newFract < 1.0 ? newFract : lengthFraction;
-        }
             break;
+        }
         case SDLK_DOWN:
             if (event.key.keysym.sym == SDLK_DOWN) {
                 lengthFraction -= 0.0005;

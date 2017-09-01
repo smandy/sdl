@@ -86,7 +86,7 @@ struct App {
     TTF_Init();
     if (font == nullptr) {
       font = TTF_OpenFont(
-          "/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf",
+          "/usr/share/fonts/TTF/LiberationMono-Regular.ttf",
           12);
       if (!font) {
         printf("TTF_OpenFont: %s\n", TTF_GetError());
