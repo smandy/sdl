@@ -9,11 +9,9 @@ Tetronimo::Tetronimo() : _data{} {}
 // }
 
 Tetronimo::Tetronimo( const char* data) : _data {}  {
-    std::cout << "Ctor" << std::endl;
     for ( int i = 0;i<4;++i) {
         for(int j = 0;j<4; ++j) {
             if (data[i * 4 + j]!=' ') {
-                std::cout << "Boom" << std::endl;
                 _data[i][j] = true;
             }
         }
@@ -25,16 +23,29 @@ Tetronimo Tetronimo::rotate() {
     for (int i = 0;i<4;++i) {
         for (int j = 0;j<4;++j) {
             if (_data[i][j]) {
-                ret._data[j][i] = true;
+                ret._data[j][3-i] = true;
             };
         };
     };
     return ret;
-    
+};
+
+
+TArrayVec make_array(std::vector<Tetronimo>&& ts) {
+    TArrayVec ret;
+    for (Tetronimo t : ts) {
+        TArray row;
+        for(int i = 0;i<4;++i) {
+            row[i] = t;
+            t = t.rotate();
+        };
+        ret.push_back(row);
+    };
+    return ret;
 };
 
 //clang-format off
-std::vector<Tetronimo> Tetronimo::tetronimos = {
+TArrayVec Tetronimo::tetronimos = make_array({
     "    "
     "    "
     "****"
@@ -64,6 +75,8 @@ std::vector<Tetronimo> Tetronimo::tetronimos = {
     "**  "
     " ** "
     "    ",
-};
+}
+    );
+
 
 //clang-format on

@@ -3,10 +3,7 @@
 #include <SDL.h>
 #include <iostream>
 
-Game::Game() : t_idx{} {
-
-  std::cout << "Have " << Tetronimo::tetronimos.size() << " tetronimos"
-            << std::endl;
+Game::Game() : t_idx{}, offset_x { 6 }, offset_y { 4 } {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cout << "Error initializing sdl " << SDL_GetError() << std::endl;
     exit(1);
@@ -29,7 +26,6 @@ Game::Game() : t_idx{} {
 };
 
 void Game::draw(Tetronimo &t, int x, int y) {
-  SDL_SetRenderDrawColor(renderer, 0, 255, 255, 0);
   for (int i = 0; i < 4; ++i) {
     for (int j = 0; j < 4; ++j) {
       if (t._data[i][j]) {
@@ -43,7 +39,6 @@ void Game::draw() {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
   SDL_RenderClear(renderer);
   SDL_SetRenderDrawColor(renderer, 0, 255, 0, 0);
-
   for (int i = 0; i < Well::WIDTH; i++) {
     for (int j = 0; j < Well::HEIGHT; j++) {
       auto x = i * BLOCK_SIZE;
@@ -53,12 +48,18 @@ void Game::draw() {
     };
   };
 
-  Tetronimo t = Tetronimo::tetronimos[t_idx];
-  int y = 0;
-  for (int i = 0; i < 4; ++i) {
-    draw(t, 6, y);
-    t = t.rotate();
-    y += 8;
+  int x = offset_x;
+  int y = offset_y;
+  for (int j = 0;j<Tetronimo::tetronimos.size();++j ) {
+      x = offset_x;
+      SDL_Color& c = colors[j];
+      SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
+      for (int i = 0; i < 4; ++i) {
+          Tetronimo& t = Tetronimo::tetronimos[j][i];
+          draw(t, x, y);
+          x += 4;
+      }
+      y += 4;
   }
   SDL_RenderPresent(renderer);
 };
@@ -79,7 +80,6 @@ void Game::run() {
 
   bool keyDown = false;
 
-  std::cout << "ENter mainloop" << std::endl;
   while (!done) {
     SDL_Event event;
     draw();
@@ -93,21 +93,21 @@ void Game::run() {
         case SDLK_ESCAPE:
           done = true;
           break;
-        case SDLK_LEFT:
-          t_idx = (t_idx - 1) % Tetronimo::tetronimos.size();
-          break;
-        case SDLK_RIGHT:
+        case SDLK_SPACE:
           t_idx = (t_idx + 1) % Tetronimo::tetronimos.size();
           break;
+        case SDLK_LEFT:
+            --offset_x;
+            break;
+        case SDLK_RIGHT:
+            ++offset_x;
+          break;
         case SDLK_UP: {
-          float newFract = lengthFraction + 0.0005;
-          lengthFraction = newFract < 1.0 ? newFract : lengthFraction;
+            --offset_y;
           break;
         }
         case SDLK_DOWN:
-          if (event.key.keysym.sym == SDLK_DOWN) {
-            lengthFraction -= 0.0005;
-          };
+            ++offset_y;
           break;
         };
       }

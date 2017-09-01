@@ -14,6 +14,8 @@ class Game {
   Well w;
 
     int t_idx;
+    int offset_x;
+    int offset_y;
 
 public:
   Game();
@@ -24,6 +26,5 @@ public:
     void draw( Tetronimo&, int x, int y);
 
     void draw_block(int x, int y);
-
     static std::vector<SDL_Color> colors;
 };
