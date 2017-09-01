@@ -11,17 +11,25 @@
 using namespace std;
 
 Vortex::Vortex() : myVec{} {
-  /* Initialize SDL for video output */
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
+    std::cout << "Error initializing sdl " << SDL_GetError() << std::endl;
     exit(1);
   }
   window =
       SDL_CreateWindow("Vortex", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                        1000, 1000, SDL_WINDOW_SHOWN);
 
+  if (!window) {
+    std::cout << "Error creating window " << SDL_GetError() << std::endl;
+    exit(1);
+  };
+
   renderer = SDL_CreateRenderer(
       window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  (!renderer) {
+    std::cout << "Error creating renderer " << SDL_GetError() << std::endl;
+    exit(1);
+  };
 };
 
 void Vortex::drawVortex(float degreeOffset, float lengthFraction) {
@@ -46,9 +54,7 @@ void Vortex::drawScene(float degreeOffset, float lengthFraction) {
 }
 
 void Vortex::run() {
-  int done;
-
-  done = 0;
+  bool done{};
   float degreeOffset = 2.0f;
   float lengthFraction = 0.98;
 
@@ -63,7 +69,7 @@ void Vortex::run() {
     if (event.type == SDL_KEYDOWN || keyDown) {
       switch (event.key.keysym.sym) {
       case SDLK_ESCAPE:
-        done = 1;
+        done = true;
         break;
       case SDLK_LEFT:
         degreeOffset += 0.005;
@@ -83,7 +89,6 @@ void Vortex::run() {
         break;
       };
     }
-
     if (event.type == SDL_QUIT) {
       done = 1;
     }
