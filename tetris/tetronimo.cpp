@@ -39,7 +39,7 @@ TArrayVec make_array(std::vector<Tetronimo> &&ts) {
 }
 
 // clang-format off
-TArrayVec Tetronimo::tetronimos = make_array({
+const TArrayVec Tetronimo::tetronimos = make_array({
     "    "
     "    "
     "****"

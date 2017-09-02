@@ -14,6 +14,6 @@ struct Tetronimo {
 
   Tetronimo();
   Tetronimo(const char *data);
-  static TArrayVec tetronimos;
+  static const TArrayVec tetronimos;
   Tetronimo rotate();
 };
