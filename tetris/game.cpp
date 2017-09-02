@@ -211,9 +211,6 @@ void Game::draw_block_filled(int y, int x) {
 
 bool Game::can_move_to(const Tetronimo &z, uint8_t y, uint8_t x) {
   auto ret = w.in_well(z, y, x) && !w.collides(z, y, x);
-  // std::cout << "can move to " << std::to_string(y) << " " <<
-  // std::to_string(x)
-  //          << " = " << std::boolalpha << ret << std::endl;
   return ret;
 };
 
@@ -321,12 +318,12 @@ void Game::run() {
 bool Game::check_rows() {
   int y = 0;
   while (y < Well::HEIGHT) {
-    if (std::all_of(w.rows[y].begin(), w.rows[y].end(),
+    if (std::all_of(std::begin(w.rows[y]),
+                    std::end(w.rows[y]),
                     [](auto x) { return x != -1; })) {
-      std::cout << "Killing row " << y << std::endl;
-      for (int i = y; i < Well::HEIGHT - 1; ++i) {
+      //std::cout << "Killing row " << y << std::endl;
+      for (auto i = y; i < Well::HEIGHT - 1; ++i)
         w.rows[i] = w.rows[i + 1];
-      };
       w.rows[Well::HEIGHT - 1] = w.empty_row;
       continue;
     };
