@@ -1,13 +1,18 @@
 #pragma once
 
-class Well {
+#include <array>
 
+class Well {
 public:
   static constexpr int WIDTH = 12;
   static constexpr int HEIGHT = 30;
 
+  using CellType = int;
+  using LineType = std::array<CellType, WIDTH>;
+  using RowsType = std::array<LineType, HEIGHT>;
+
   Well();
 
 private:
-  int rows[HEIGHT][WIDTH];
+  RowsType rows;
 };

@@ -3,26 +3,26 @@
 #include <SDL.h>
 #include <iostream>
 
-Game::Game() : t_idx{}, offset_x { 6 }, offset_y { 4 } {
+Game::Game() : t_idx{}, offset_x{6}, offset_y{4} {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cout << "Error initializing sdl " << SDL_GetError() << std::endl;
     exit(1);
   }
-  window = SDL_CreateWindow("Tetrix", SDL_WINDOWPOS_CENTERED,
+  window = SDL_CreateWindow("Tetris", SDL_WINDOWPOS_CENTERED,
                             SDL_WINDOWPOS_CENTERED, BLOCK_SIZE * Well::WIDTH,
                             BLOCK_SIZE * Well::HEIGHT, SDL_WINDOW_SHOWN);
 
   if (!window) {
     std::cout << "Error creating window " << SDL_GetError() << std::endl;
     exit(1);
-  };
+  }
 
   renderer = SDL_CreateRenderer(
       window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   if (!renderer) {
     std::cout << "Error creating renderer " << SDL_GetError() << std::endl;
     exit(1);
-  };
+  }
 }
 
 void Game::draw(Tetronimo &t, int x, int y) {
@@ -30,7 +30,7 @@ void Game::draw(Tetronimo &t, int x, int y) {
     for (int j = 0; j < 4; ++j) {
       if (t._data[i][j]) {
         draw_block(x + i, y + j);
-      };
+      }
     }
   }
 }
@@ -45,21 +45,21 @@ void Game::draw() {
       auto y = j * BLOCK_SIZE;
       SDL_RenderDrawLine(renderer, x - 3, y, x + 3, y);
       SDL_RenderDrawLine(renderer, x, y - 3, x, y + 3);
-    };
-  };
+    }
+  }
 
   int x = offset_x;
   int y = offset_y;
-  for (int j = 0;j<Tetronimo::tetronimos.size();++j ) {
-      x = offset_x;
-      SDL_Color& c = colors[j];
-      SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
-      for (int i = 0; i < 4; ++i) {
-          Tetronimo& t = Tetronimo::tetronimos[j][i];
-          draw(t, x, y);
-          x += 4;
-      }
-      y += 4;
+  for (int j = 0; j < Tetronimo::tetronimos.size(); ++j) {
+    x = offset_x;
+    SDL_Color &c = colors[j];
+    SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
+    for (int i = 0; i < 4; ++i) {
+      Tetronimo &t = Tetronimo::tetronimos[j][i];
+      draw(t, x, y);
+      x += 5;
+    }
+    y += 5;
   }
   SDL_RenderPresent(renderer);
 }
@@ -85,8 +85,6 @@ void Game::run() {
     draw();
     typedef decltype(event.type) lastEvent;
     int haveEvent = SDL_PollEvent(&event);
-    // cout << "Event !!" << event.type << endl;
-
     if (haveEvent) {
       if (event.type == SDL_KEYDOWN) {
         switch (event.key.keysym.sym) {
@@ -97,19 +95,19 @@ void Game::run() {
           t_idx = (t_idx + 1) % Tetronimo::tetronimos.size();
           break;
         case SDLK_LEFT:
-            --offset_x;
-            break;
+          --offset_x;
+          break;
         case SDLK_RIGHT:
-            ++offset_x;
+          ++offset_x;
           break;
         case SDLK_UP: {
-            --offset_y;
+          --offset_y;
           break;
         }
         case SDLK_DOWN:
-            ++offset_y;
+          ++offset_y;
           break;
-        };
+        }
       }
       if (event.type == SDL_QUIT) {
         done = true;
@@ -120,11 +118,5 @@ void Game::run() {
 }
 
 std::vector<SDL_Color> Game::colors = {
-    {   0, 255, 255, 0},
-    {   0,   0, 255, 0},
-    { 255, 165,   0, 0},
-    { 255, 255,   0, 0},
-    {   0, 255, 255, 0},
-    { 255,   0, 255, 0},
-    { 255,   0,   0, 0}
-};
+    {0, 255, 255, 0}, {0, 0, 255, 0},   {255, 165, 0, 0}, {255, 255, 0, 0},
+    {0, 255, 255, 0}, {255, 0, 255, 0}, {255, 0, 0, 0}};
