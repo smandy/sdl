@@ -23,7 +23,7 @@ Game::Game() : t_idx{}, offset_x { 6 }, offset_y { 4 } {
     std::cout << "Error creating renderer " << SDL_GetError() << std::endl;
     exit(1);
   };
-};
+}
 
 void Game::draw(Tetronimo &t, int x, int y) {
   for (int i = 0; i < 4; ++i) {
@@ -62,7 +62,7 @@ void Game::draw() {
       y += 4;
   }
   SDL_RenderPresent(renderer);
-};
+}
 
 void Game::draw_block(int x, int y) {
   SDL_Rect r;
@@ -71,7 +71,7 @@ void Game::draw_block(int x, int y) {
   r.w = BLOCK_SIZE - 2;
   r.h = BLOCK_SIZE - 2;
   SDL_RenderFillRect(renderer, &r);
-};
+}
 
 void Game::run() {
   bool done{false};

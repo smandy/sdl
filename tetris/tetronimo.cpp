@@ -1,12 +1,7 @@
-
 #include "tetronimo.h"
 #include <iostream>
 
 Tetronimo::Tetronimo() : _data{} {}
-
-// Tetronimo::Tetronimo( DataType data) : _data(data) {
-//     std::cout << "Bing" << std::endl;
-// }
 
 Tetronimo::Tetronimo( const char* data) : _data {}  {
     for ( int i = 0;i<4;++i) {
@@ -28,7 +23,7 @@ Tetronimo Tetronimo::rotate() {
         };
     };
     return ret;
-};
+}
 
 
 TArrayVec make_array(std::vector<Tetronimo>&& ts) {
@@ -42,7 +37,7 @@ TArrayVec make_array(std::vector<Tetronimo>&& ts) {
         ret.push_back(row);
     };
     return ret;
-};
+}
 
 //clang-format off
 TArrayVec Tetronimo::tetronimos = make_array({

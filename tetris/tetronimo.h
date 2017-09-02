@@ -5,17 +5,15 @@
 
 struct Tetronimo;
 
-using  TArray = std::array<Tetronimo, 4>;
+using TArray = std::array<Tetronimo, 4>;
 using TArrayVec = std::vector<TArray>;
 
 struct Tetronimo {
-    using DataType = std::array< std::array<bool,4>, 4>;
-    
-    DataType _data;
+  using DataType = std::array<std::array<bool, 4>, 4>;
+  DataType _data;
 
-    Tetronimo();
-    //Tetronimo( DataType data);
-    Tetronimo( const char* data);
-    static TArrayVec tetronimos;
-    Tetronimo rotate();
+  Tetronimo();
+  Tetronimo(const char *data);
+  static TArrayVec tetronimos;
+  Tetronimo rotate();
 };

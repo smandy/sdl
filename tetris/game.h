@@ -1,8 +1,9 @@
-#pragma once 
-#include "well.h"
+#pragma once
 
-#include "SDL.h"
+#include <SDL.h>
 #include <vector>
+
+#include "well.h"
 #include "tetronimo.h"
 
 class Game {
