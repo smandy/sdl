@@ -88,7 +88,6 @@ Game::Game()
     std::cout << "Error creating renderer " << SDL_GetError() << std::endl;
     exit(1);
   }
-
   uint32_t delay = 400; /* To round it down to the nearest 10 ms */
   SDL_TimerID my_timer_id = SDL_AddTimer(delay, my_timer_func, (void *)this);
 }
@@ -162,27 +161,27 @@ void Game::draw_well() {
       if (w.rows[y][x] != -1) {
         set_tetr_color(w.rows[y][x]);
         draw_block(y, x, false);
-      };
-    };
-  };
-};
+      }
+    }
+  }
+}
 
 void Game::set_block_ul(int8_t y, int8_t x, SDL_Rect &r) {
   r.x = x * BLOCK_SIZE + 50;
   r.y = (Well::HEIGHT - y + 1) * BLOCK_SIZE + 50;
-};
+}
 
 void Game::set_tetr_color(uint32_t i) {
   SDL_Color &c = colors[i];
   SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
-};
+}
 
 void Game::draw_block(int y, int x, bool outline) {
   if (outline) {
     draw_block_transparent(y, x);
   } else {
     draw_block_filled(y, x);
-  };
+  }
 }
 
 void Game::draw_block_transparent(int y, int x) {
@@ -237,8 +236,7 @@ void Game::process_input_events() {
         break;
       }
       case SDLK_ESCAPE: {
-        running = false
-        break;
+        running = false break;
       }
       }
     }
@@ -267,7 +265,7 @@ void Game::process_input_events() {
           ++offset_x;
         if (can_move_to(t(), ty, tx + 1)) {
           tx += 1;
-        };
+        }
         break;
       }
       case SDLK_LEFT: {
@@ -275,7 +273,7 @@ void Game::process_input_events() {
           --offset_x;
         if (can_move_to(t(), ty, tx - 1)) {
           tx -= 1;
-        };
+        }
         break;
       }
       case SDLK_UP: {
@@ -291,7 +289,7 @@ void Game::process_input_events() {
           if (can_move_to(new_tet, ty, tx)) {
             rot = new_rot;
             // std::cout << " new rot is " << new_rot << std::endl;
-          };
+          }
         }
         break;
       }
@@ -310,7 +308,7 @@ void Game::process_input_events() {
     if (event.type == SDL_USEREVENT) {
       reinterpret_cast<Game *>(event.user.data1)
           ->on_timer(reinterpret_cast<size_t>(event.user.data2));
-    };
+    }
   }
 }
 
@@ -323,9 +321,9 @@ bool Game::check_rows() {
         w.rows[i] = w.rows[i + 1];
       w.rows[Well::HEIGHT - 1] = w.empty_row;
       continue;
-    };
+    }
     y++;
-  };
+  }
 }
 
 bool Game::down_impl() {
@@ -335,7 +333,7 @@ bool Game::down_impl() {
     w.place(t(), ty, tx, tetr);
     check_rows();
     init_tetr();
-  };
+  }
 }
 
 // clang-format off
