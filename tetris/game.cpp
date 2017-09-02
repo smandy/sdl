@@ -25,7 +25,7 @@ uint32_t my_timer_func(uint32_t interval, void *ctx) {
   event.user = userevent;
   SDL_PushEvent(&event);
   return (interval);
-};
+}
 
 void Game::init_tetr() {
   game_running = false;
@@ -107,7 +107,7 @@ void Game::on_timer(uint32_t interval) {
   if (!antigravity && game_running) {
     down_impl();
   }
-};
+}
 
 void Game::draw() {
   static SDL_Rect r;
@@ -185,20 +185,19 @@ void Game::draw_block(int y, int x, bool outline) {
   };
 }
 
-
 void Game::draw_block_transparent(int y, int x) {
   SDL_Rect r;
   set_block_ul(y, x, r);
-  
-  static std::array<uint8_t,3> x1s{0, 3, 4};
-  static std::array<uint8_t,3> y1s{0, 1, 4};
-  static std::array<uint8_t,2> x2s{1, 2};
-  static std::array<uint8_t,2> y2s{2, 3};
-  apply_to(x1s, [&](SDL_Point& p) { p.x = r.x; });
-  apply_to(y1s, [&](SDL_Point& p) { p.y = r.y; });
-  apply_to(x2s, [&](SDL_Point& p) { p.x = r.x + BLOCK_SIZE - 2; });
-  apply_to(y2s, [&](SDL_Point& p) { p.y = r.y + BLOCK_SIZE - 2; });
-  SDL_RenderDrawLines( renderer, points.data(), 5);
+
+  static std::array<uint8_t, 3> x1s{0, 3, 4};
+  static std::array<uint8_t, 3> y1s{0, 1, 4};
+  static std::array<uint8_t, 2> x2s{1, 2};
+  static std::array<uint8_t, 2> y2s{2, 3};
+  apply_to(x1s, [&](SDL_Point &p) { p.x = r.x; });
+  apply_to(y1s, [&](SDL_Point &p) { p.y = r.y; });
+  apply_to(x2s, [&](SDL_Point &p) { p.x = r.x + BLOCK_SIZE - 2; });
+  apply_to(y2s, [&](SDL_Point &p) { p.y = r.y + BLOCK_SIZE - 2; });
+  SDL_RenderDrawLines(renderer, points.data(), 5);
 }
 
 void Game::draw_block_filled(int y, int x) {
@@ -215,113 +214,111 @@ bool Game::can_move_to(const Tetronimo &z, uint8_t y, uint8_t x) {
 };
 
 void Game::run() {
-  bool done{false};
-  float degreeOffset = 2.0f;
-  float lengthFraction = 0.98;
-
-  bool keyDown = false;
-
-  while (!done) {
-    SDL_Event event;
+  running = true;
+  while (running) {
     draw();
-    typedef decltype(event.type) lastEvent;
-    int haveEvent = SDL_PollEvent(&event);
-    if (haveEvent) {
-      if (event.type == SDL_KEYDOWN) {
-        switch (event.key.keysym.sym) {
-        case SDLK_r: {
-          game_running = true;
-          w.reset();
-          init_tetr();
-          break;
-        }
-          // case SDLK_ESCAPE: {
-          //   done = true;
-          //   break;
-          // }
-        }
-      }
-
-      if (event.type == SDL_KEYDOWN && game_running) {
-        switch (event.key.keysym.sym) {
-        case SDLK_SPACE: {
-          while (down_impl()) {
-          };
-          break;
-        }
-        case SDLK_p: {
-          show_periodic_table = !show_periodic_table;
-          break;
-        }
-        case SDLK_a: {
-          antigravity = !antigravity;
-          break;
-        }
-        case SDLK_n: {
-          init_tetr();
-          break;
-        }
-        case SDLK_RIGHT: {
-          if (show_periodic_table)
-            ++offset_x;
-          if (can_move_to(t(), ty, tx + 1)) {
-            tx += 1;
-          };
-          break;
-        }
-        case SDLK_LEFT: {
-          if (show_periodic_table)
-            --offset_x;
-          if (can_move_to(t(), ty, tx - 1)) {
-            tx -= 1;
-          };
-          break;
-        }
-        case SDLK_UP: {
-          if (show_periodic_table)
-            ++offset_y;
-          if (antigravity) {
-            if (can_move_to(t(), ty + 1, tx)) {
-              ty += 1;
-            }
-          } else {
-            auto new_rot = (rot + 1) % 4;
-            const Tetronimo &new_tet = Tetronimo::tetronimos[tetr][new_rot];
-            if (can_move_to(new_tet, ty, tx)) {
-              rot = new_rot;
-              std::cout << " new rot is " << new_rot << std::endl;
-            };
-          }
-          break;
-        }
-        case SDLK_DOWN:
-          if (show_periodic_table)
-            --offset_y;
-          down_impl();
-          break;
-        }
-      }
-
-      if (event.type == SDL_QUIT) {
-        done = true;
-      }
-
-      if (event.type == SDL_USEREVENT) {
-        reinterpret_cast<Game *>(event.user.data1)
-            ->on_timer(reinterpret_cast<size_t>(event.user.data2));
-      };
-    }
+    process_input_events();
   }
   SDL_Quit();
+}
+
+void Game::process_input_events() {
+  SDL_Event event;
+  typedef decltype(event.type) lastEvent;
+  bool keyDown = false;
+  int haveEvent = SDL_PollEvent(&event);
+  if (haveEvent) {
+    if (event.type == SDL_KEYDOWN) {
+      switch (event.key.keysym.sym) {
+      case SDLK_r: {
+        game_running = true;
+        w.reset();
+        init_tetr();
+        break;
+      }
+      case SDLK_ESCAPE: {
+        running = false
+        break;
+      }
+      }
+    }
+
+    if (event.type == SDL_KEYDOWN && game_running) {
+      switch (event.key.keysym.sym) {
+      case SDLK_SPACE: {
+        while (down_impl()) {
+        };
+        break;
+      }
+      case SDLK_p: {
+        show_periodic_table = !show_periodic_table;
+        break;
+      }
+      case SDLK_a: {
+        antigravity = !antigravity;
+        break;
+      }
+      case SDLK_n: {
+        init_tetr();
+        break;
+      }
+      case SDLK_RIGHT: {
+        if (show_periodic_table)
+          ++offset_x;
+        if (can_move_to(t(), ty, tx + 1)) {
+          tx += 1;
+        };
+        break;
+      }
+      case SDLK_LEFT: {
+        if (show_periodic_table)
+          --offset_x;
+        if (can_move_to(t(), ty, tx - 1)) {
+          tx -= 1;
+        };
+        break;
+      }
+      case SDLK_UP: {
+        if (show_periodic_table)
+          ++offset_y;
+        if (antigravity) {
+          if (can_move_to(t(), ty + 1, tx)) {
+            ty += 1;
+          }
+        } else {
+          auto new_rot = (rot + 1) % 4;
+          const Tetronimo &new_tet = Tetronimo::tetronimos[tetr][new_rot];
+          if (can_move_to(new_tet, ty, tx)) {
+            rot = new_rot;
+            // std::cout << " new rot is " << new_rot << std::endl;
+          };
+        }
+        break;
+      }
+      case SDLK_DOWN:
+        if (show_periodic_table)
+          --offset_y;
+        down_impl();
+        break;
+      }
+    }
+
+    if (event.type == SDL_QUIT) {
+      running = false;
+    }
+
+    if (event.type == SDL_USEREVENT) {
+      reinterpret_cast<Game *>(event.user.data1)
+          ->on_timer(reinterpret_cast<size_t>(event.user.data2));
+    };
+  }
 }
 
 bool Game::check_rows() {
   int y = 0;
   while (y < Well::HEIGHT) {
-    if (std::all_of(std::begin(w.rows[y]),
-                    std::end(w.rows[y]),
+    if (std::all_of(std::begin(w.rows[y]), std::end(w.rows[y]),
                     [](auto x) { return x != -1; })) {
-      //std::cout << "Killing row " << y << std::endl;
       for (auto i = y; i < Well::HEIGHT - 1; ++i)
         w.rows[i] = w.rows[i + 1];
       w.rows[Well::HEIGHT - 1] = w.empty_row;
@@ -329,7 +326,7 @@ bool Game::check_rows() {
     };
     y++;
   };
-};
+}
 
 bool Game::down_impl() {
   if (can_move_to(t(), ty - 1, tx)) {
@@ -339,7 +336,7 @@ bool Game::down_impl() {
     check_rows();
     init_tetr();
   };
-};
+}
 
 // clang-format off
 std::vector<SDL_Color> Game::colors = {
@@ -352,5 +349,4 @@ std::vector<SDL_Color> Game::colors = {
     {255,   0,   0, 0}};
 // clang-format on
 
-
-std::array<SDL_Point,5> Game::points = {};
+std::array<SDL_Point, 5> Game::points = {};

@@ -38,6 +38,10 @@ public:
   bool can_move_to(const Tetronimo &z, uint8_t y, uint8_t x);
   void set_block_ul(int8_t y, int8_t x, SDL_Rect &r);
 
+  void process_input_events();
+
+  bool running;
+
   static std::array<SDL_Point,5> points;
 
   template<size_t N>

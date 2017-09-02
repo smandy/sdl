@@ -15,7 +15,7 @@ struct Well {
   LineType empty_row;
 
   Well();
-
+  
   void reset();
 
   bool collides(const Tetronimo &t, int8_t x, int8_t y);

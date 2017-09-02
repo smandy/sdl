@@ -5,11 +5,11 @@
 Well::Well() {
   empty_row.fill(-1);
   reset();
-};
+}
 
 void Well::reset() {
   rows.fill(empty_row);
-};
+}
 
 bool Well::in_well(const Tetronimo &t, int8_t y, int8_t x) {
   for (int i = 0; i < 4; ++i) {
@@ -26,7 +26,7 @@ bool Well::in_well(const Tetronimo &t, int8_t y, int8_t x) {
     }
   }
   return true;
-};
+}
 
 void Well::place(const Tetronimo &t, int8_t y, int8_t x, int8_t col) {
   assert(in_well(t, y, x));
@@ -40,7 +40,7 @@ void Well::place(const Tetronimo &t, int8_t y, int8_t x, int8_t col) {
       rows[yy][xx] = col;
     }
   }
-};
+}
 
 bool Well::collides(const Tetronimo &t, int8_t y, int8_t x) {
   assert(in_well(t, y, x));
@@ -56,3 +56,4 @@ bool Well::collides(const Tetronimo &t, int8_t y, int8_t x) {
   }
   return false;
 }
+
