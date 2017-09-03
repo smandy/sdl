@@ -7,18 +7,15 @@ Well::Well() {
   reset();
 }
 
-void Well::reset() {
-  rows.fill(empty_row);
-}
+void Well::reset() { rows.fill(empty_row); }
 
 bool Well::in_well(const Tetronimo &t, int8_t y, int8_t x) {
-  for (int i = 0; i < 4; ++i) {
-    for (int j = 0; j < 4; ++j) {
+  for (uint8_t i = 0; i < 4; ++i) {
+    for (uint8_t j = 0; j < 4; ++j) {
       if (!t._data[j][i])
         continue;
       uint8_t yy = y + j;
       uint8_t xx = x + i;
-
       if (xx < 0 || xx >= WIDTH)
         return false;
       if (yy < 0 || yy >= HEIGHT)
@@ -31,8 +28,8 @@ bool Well::in_well(const Tetronimo &t, int8_t y, int8_t x) {
 void Well::place(const Tetronimo &t, int8_t y, int8_t x, int8_t col) {
   assert(in_well(t, y, x));
   assert(!collides(t, y, x));
-  for (int i = 0; i < 4; ++i) {
-    for (int j = 0; j < 4; ++j) {
+  for (uint8_t i = 0; i < 4; ++i) {
+    for (uint8_t j = 0; j < 4; ++j) {
       if (!t._data[j][i])
         continue;
       uint8_t yy = y + j;
@@ -44,8 +41,8 @@ void Well::place(const Tetronimo &t, int8_t y, int8_t x, int8_t col) {
 
 bool Well::collides(const Tetronimo &t, int8_t y, int8_t x) {
   assert(in_well(t, y, x));
-  for (int i = 0; i < 4; ++i) {
-    for (int j = 0; j < 4; ++j) {
+  for (uint8_t i = 0; i < 4; ++i) {
+    for (uint8_t j = 0; j < 4; ++j) {
       if (!t._data[j][i])
         continue;
       uint8_t yy = y + j;
@@ -56,4 +53,3 @@ bool Well::collides(const Tetronimo &t, int8_t y, int8_t x) {
   }
   return false;
 }
-

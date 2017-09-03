@@ -35,7 +35,7 @@ TArrayVec make_array(std::vector<Tetronimo> &&ts) {
     }
     ret.push_back(row);
   }
-  return ret;
+  return std::move(ret);
 }
 
 // clang-format off

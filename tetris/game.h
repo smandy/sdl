@@ -7,7 +7,6 @@
 #include "well.h"
 #include <functional>
 
-
 class Game {
   static constexpr int BLOCK_SIZE = 30;
 
@@ -27,7 +26,7 @@ public:
   void draw();
 
   void draw(const Tetronimo &, int y, int x, bool outline);
-  
+
   void draw_block(int x, int y, bool outline);
   void draw_block_filled(int x, int y);
   void draw_block_transparent(int x, int y);
@@ -42,23 +41,13 @@ public:
 
   bool running;
 
-  static std::array<SDL_Point,5> points;
-
-  template<size_t N>
-  void apply_to(std::array<uint8_t,N> xs, std::function<void(SDL_Point &)> f) {
-  for (auto idx : xs) {
-    f(points[idx]);
-  };
-};
-
-  
   uint8_t tetr;
   int8_t tx;
   int8_t ty;
   uint8_t rot;
 
   bool game_running;
-  
+
   const Tetronimo &t();
   void draw_well();
   bool show_periodic_table;
@@ -67,6 +56,8 @@ public:
   bool down_impl();
 
   bool antigravity;
-  
+
   bool check_rows();
+  bool check_rows_impl();
+  bool check_autofill();
 };

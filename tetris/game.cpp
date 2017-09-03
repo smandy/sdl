@@ -7,7 +7,7 @@
 #include <numeric>
 
 // Our coordinate system
-// row major.
+// row major.e
 // row[0][6] center of bottom cell
 
 uint32_t my_timer_func(uint32_t interval, void *ctx) {
@@ -24,7 +24,7 @@ uint32_t my_timer_func(uint32_t interval, void *ctx) {
   event.type = SDL_USEREVENT;
   event.user = userevent;
   SDL_PushEvent(&event);
-  return (interval);
+  return interval;
 }
 
 void Game::init_tetr() {
@@ -186,16 +186,24 @@ void Game::draw_block(int y, int x, bool outline) {
 
 void Game::draw_block_transparent(int y, int x) {
   SDL_Rect r;
+  std::array<SDL_Point, 5> points;
+
   set_block_ul(y, x, r);
 
-  static std::array<uint8_t, 3> x1s{0, 3, 4};
-  static std::array<uint8_t, 3> y1s{0, 1, 4};
-  static std::array<uint8_t, 2> x2s{1, 2};
-  static std::array<uint8_t, 2> y2s{2, 3};
-  apply_to(x1s, [&](SDL_Point &p) { p.x = r.x; });
-  apply_to(y1s, [&](SDL_Point &p) { p.y = r.y; });
-  apply_to(x2s, [&](SDL_Point &p) { p.x = r.x + BLOCK_SIZE - 2; });
-  apply_to(y2s, [&](SDL_Point &p) { p.y = r.y + BLOCK_SIZE - 2; });
+  for (uint8_t x : {0, 3}) {
+    points[x].x = r.x;
+  };
+
+  for (uint8_t x : {0, 1}) {
+    points[x].y = r.y;
+  };
+  for (uint8_t x : {1, 2}) {
+    points[x].x = r.x + BLOCK_SIZE - 2;
+  };
+  for (uint8_t x : {2, 3}) {
+    points[x].y = r.y + BLOCK_SIZE - 2;
+  };
+  points[4] = points[0];
   SDL_RenderDrawLines(renderer, points.data(), 5);
 }
 
@@ -236,7 +244,8 @@ void Game::process_input_events() {
         break;
       }
       case SDLK_ESCAPE: {
-        running = false break;
+        running = false;
+        break;
       }
       }
     }
@@ -313,18 +322,53 @@ void Game::process_input_events() {
 }
 
 bool Game::check_rows() {
+  while(true) {
+    if (!check_rows_impl())
+      break;
+    if (!check_autofill())
+      break;
+  }
+}
+
+bool Game::check_rows_impl() {
+  std::cout << "CHeck rows impl" << std::endl;
   int y = 0;
+  bool change = false;
   while (y < Well::HEIGHT) {
     if (std::all_of(std::begin(w.rows[y]), std::end(w.rows[y]),
                     [](auto x) { return x != -1; })) {
       for (auto i = y; i < Well::HEIGHT - 1; ++i)
         w.rows[i] = w.rows[i + 1];
       w.rows[Well::HEIGHT - 1] = w.empty_row;
+      change = true;
       continue;
     }
     y++;
   }
+  return change;
 }
+
+bool Game::check_autofill() {
+  std::cout << "CHeck autofill" << std::endl;
+  bool change = false;
+  for (int x = 0; x < Well::WIDTH; ++x) {
+    int y2 = 0;
+    while(y2 < Well::HEIGHT - 1) {
+      if (w.rows[y2 + 1][x] != -1 && w.rows[y2][x] == -1) {
+        change = true;
+        for(auto y3=y2;y3<Well::HEIGHT-1;++y3) {
+          w.rows[y3][x] = w.rows[y3 + 1][x];
+        };
+        w.rows[Well::HEIGHT-1][x] = -1;
+        std::cout << "Autofille!!!" << std::endl;
+      } else {
+        ++y2;
+      }
+    }
+  }
+  return change;
+}
+
 
 bool Game::down_impl() {
   if (can_move_to(t(), ty - 1, tx)) {
@@ -339,12 +383,10 @@ bool Game::down_impl() {
 // clang-format off
 std::vector<SDL_Color> Game::colors = {
     {  0, 255, 255, 0},
-    {  0,   0, 255, 0},
+    {50,   50, 255, 0},
     {255, 165,   0, 0},
     {255, 255,   0, 0},
     {  0, 255, 255, 0},
     {255,   0, 255, 0},
-    {255,   0,   0, 0}};
+    {255, 0, 0, 0}};
 // clang-format on
-
-std::array<SDL_Point, 5> Game::points = {};
