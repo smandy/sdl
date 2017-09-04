@@ -2,9 +2,7 @@
 #include <math.h>
 
 class Mousey {
-
   float direction;
-
   float x;
   float y;
 
