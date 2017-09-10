@@ -53,14 +53,40 @@ Game::Game() : running{true}, a{} {
 void Game::draw() {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
   SDL_RenderClear(renderer);
-
-  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0);
-  for (auto &x : a.segments) {
-    draw_block(x);
+  
+  SDL_SetRenderDrawColor(renderer, 255,255, 255, 0);
+  for( int8_t x = -1;x<X_BLOCKS+1;++x) {
+    draw_block( { x, -1 });
+    draw_block( { x, Y_BLOCKS });
   };
+
+  for( int8_t y = -1;y<Y_BLOCKS+1;++y) {
+    draw_block( {  -1,y });
+    draw_block( { X_BLOCKS,y} );
+  };
+
+  uint8_t c = 255;
+  SDL_SetRenderDrawColor(renderer, c, 0, 0, 0);
+  for (auto x = std::rbegin(a.segments); x!=std::rend(a.segments); ++x) {
+    if (c>100) {
+      c -=10;
+      SDL_SetRenderDrawColor(renderer, c, 0, 0, 0);
+    }
+    draw_block(*x);
+  };
+
+  SDL_SetRenderDrawColor(renderer, 255, 255, 0, 0);
+
+  // for (int8_t y = 0;y<Y_BLOCKS;++y) {
+  //   for( int8_t x = 0;x<X_BLOCKS;++x) {
+  //     if ( a.grid[y][x] != CellType::EMPTY) {
+  //       draw_block( { x, y } );
+  //     }
+  //   };
+  // };
+  
   SDL_SetRenderDrawColor(renderer, 0, 255, 255, 0);
   draw_block(a.m);
-
   SDL_RenderPresent(renderer);
 }
 
