@@ -6,6 +6,7 @@
 #include <iostream>
 #include <numeric>
 
+namespace snake {
 uint32_t my_timer_func(uint32_t interval, void *ctx) {
   // std::cout << "My Timer" << std::endl;
   SDL_Event event;
@@ -23,15 +24,15 @@ uint32_t my_timer_func(uint32_t interval, void *ctx) {
   return interval;
 }
 
-Game::Game() : game_running{true}, running{true} {
+Game::Game() : running{true}, a{} {
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
     std::cout << "Error initializing sdl " << SDL_GetError() << std::endl;
     exit(1);
   }
-  window =
-      SDL_CreateWindow("Snake", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                       1200, 800, SDL_WINDOW_SHOWN);
+  window = SDL_CreateWindow("Snake", SDL_WINDOWPOS_CENTERED,
+                            SDL_WINDOWPOS_CENTERED, BLOCK_SIZE * (X_BLOCKS + 5),
+                            BLOCK_SIZE * (Y_BLOCKS + 5), SDL_WINDOW_SHOWN);
 
   if (!window) {
     std::cout << "Error creating window " << SDL_GetError() << std::endl;
@@ -45,19 +46,41 @@ Game::Game() : game_running{true}, running{true} {
     std::cout << "Error creating renderer " << SDL_GetError() << std::endl;
     exit(1);
   }
-  uint32_t delay = 400; /* To round it down to the nearest 10 ms */
+  uint32_t delay = 100; /* To round it down to the nearest 10 ms */
   SDL_TimerID my_timer_id = SDL_AddTimer(delay, my_timer_func, (void *)this);
 }
 
 void Game::draw() {
-  static SDL_Rect r;
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-
   SDL_RenderClear(renderer);
+
+  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0);
+  for (auto &x : a.segments) {
+    draw_block(x);
+  };
+  SDL_SetRenderDrawColor(renderer, 0, 255, 255, 0);
+  draw_block(a.m);
+
   SDL_RenderPresent(renderer);
 }
 
+void Game::draw_block(const Coord &c) {
+  static SDL_Rect r;
+  set_block_ul(c, r);
+  r.w = BLOCK_SIZE - 2;
+  r.h = BLOCK_SIZE - 2;
+  SDL_RenderFillRect(renderer, &r);
+};
+
+void Game::set_block_ul(const Coord &c, SDL_Rect &r) {
+  r.x = c.real() * BLOCK_SIZE + 50;
+  r.y = (c.imag() + 1) * BLOCK_SIZE + 50;
+}
+  
 void Game::on_timer(uint32_t interval) {
+  if (a.game_running) {
+    a.move_snake();
+  }
 }
 
 void Game::run() {
@@ -75,7 +98,6 @@ void Game::process_input_events() {
   bool keyDown = false;
   int haveEvent = SDL_PollEvent(&event);
   if (haveEvent) {
-
     if (event.type == SDL_KEYDOWN) {
       switch (event.key.keysym.sym) {
       case SDLK_r: {
@@ -87,8 +109,8 @@ void Game::process_input_events() {
       }
       }
     }
-
-    if (event.type == SDL_KEYDOWN && game_running) {
+    
+    if (event.type == SDL_KEYDOWN && a.game_running) {
       switch (event.key.keysym.sym) {
       case SDLK_SPACE: {
         break;
@@ -103,15 +125,19 @@ void Game::process_input_events() {
         break;
       }
       case SDLK_RIGHT: {
+        a.maybe_switch_direction(Arena::directions[1]);
         break;
       }
       case SDLK_LEFT: {
+        a.maybe_switch_direction(Arena::directions[3]);
         break;
       }
       case SDLK_UP: {
+        a.maybe_switch_direction(Arena::directions[2]);
         break;
       }
       case SDLK_DOWN:
+        a.maybe_switch_direction(Arena::directions[0]);
         break;
       }
     }
@@ -125,4 +151,5 @@ void Game::process_input_events() {
           ->on_timer(reinterpret_cast<size_t>(event.user.data2));
     }
   }
+}
 }

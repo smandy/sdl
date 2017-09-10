@@ -4,8 +4,8 @@ env = Environment(LIBS=['SDLmain', 'SDL2'] ,
                   CPPPATH=['/usr/include/SDL2'])
 
 game = env.Object('game.cpp')
-
-main = env.Program('main' , ['main.cpp',game])
+arena = env.Object('arena.cpp')
+main = env.Program('main' , ['main.cpp', game, arena])
 
 
 
