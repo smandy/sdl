@@ -327,7 +327,7 @@ bool Game::check_rows() {
 }
 
 bool Game::check_rows_impl() {
-  //std::cout << "CHeck rows impl" << std::endl;
+  // std::cout << "CHeck rows impl" << std::endl;
   int y = 0;
   bool change = false;
   while (y < Well::HEIGHT) {
@@ -345,7 +345,7 @@ bool Game::check_rows_impl() {
 }
 
 bool Game::check_autofill() {
-  //std::cout << "CHeck autofill" << std::endl;
+  // std::cout << "CHeck autofill" << std::endl;
   bool change = false;
   for (int x = 0; x < Well::WIDTH; ++x) {
     int y2 = 0;
@@ -356,7 +356,7 @@ bool Game::check_autofill() {
           w.rows[y3][x] = w.rows[y3 + 1][x];
         };
         w.rows[Well::HEIGHT - 1][x] = -1;
-        //std::cout << "Autofille!!!" << std::endl;
+        // std::cout << "Autofille!!!" << std::endl;
       } else {
         ++y2;
       }
