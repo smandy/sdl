@@ -19,3 +19,4 @@ i
 *.o
 /tetris/main
 **/.sconsign.dblite
+/snake/main

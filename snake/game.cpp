@@ -127,6 +127,7 @@ void Game::process_input_events() {
     if (event.type == SDL_KEYDOWN) {
       switch (event.key.keysym.sym) {
       case SDLK_r: {
+        a = Arena {};
         break;
       }
       case SDLK_ESCAPE: {
@@ -141,8 +142,7 @@ void Game::process_input_events() {
       case SDLK_SPACE: {
         break;
       }
-      case SDLK_p: {
-        break;
+      case SDLK_r: {
       }
       case SDLK_a: {
         break;

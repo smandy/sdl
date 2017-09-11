@@ -23,8 +23,10 @@ void Arena::randomize_m() {
   do {
     m.real(rand() % X_BLOCKS);
     m.imag(rand() % Y_BLOCKS);
-  } while (grid[m.imag()][m.real()] == CellType::SNAKE);
+  } while (grid_value(m) == CellType::SNAKE);
 }
+
+CellType Arena::grid_value(const Coord &c) { return grid[m.imag()][m.real()]; };
 
 void Arena::maybe_switch_direction(const Coord &new_direction) {
   auto new_point = segments.back() + new_direction;
@@ -53,21 +55,26 @@ void Arena::move_snake() {
     return;
   }
 
-  if (grid[new_point.imag()][new_point.real()] == CellType::SNAKE) {
+  if (grid_value(new_point) == CellType::SNAKE) {
     return;
     game_running = false;
   }
-
   segments.push_back(new_point);
-  grid[new_point.imag()][new_point.real()] = CellType::SNAKE;
+  set_point(new_point, CellType::SNAKE);
+  // grid[new_point.imag()][new_point.real()] = CellType::SNAKE;
   if (new_point == m) {
     randomize_m();
   } else {
     auto x = segments.front();
     segments.pop_front();
-    grid[x.imag()][x.real()] = CellType::EMPTY;
+    set_point(x, CellType::EMPTY);
+    // grid[x.imag()][x.real()] = CellType::EMPTY;
   }
 }
+
+void Arena::set_point(const Coord &c, CellType t) {
+  grid[c.imag()][c.real()] = t;
+};
 
 std::vector<Coord> Arena::directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
 }
