@@ -24,6 +24,8 @@ public:
   void run();
   void process_input_events();
 
+  bool paused;
+
   bool running;
   bool is_on_grid( const Coord&);
   void on_timer(uint32_t interval);

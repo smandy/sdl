@@ -24,7 +24,7 @@ uint32_t my_timer_func(uint32_t interval, void *ctx) {
   return interval;
 }
 
-Game::Game() : running{true}, a{} {
+  Game::Game() : running{true}, paused{false}, a{} {
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
     std::cout << "Error initializing sdl " << SDL_GetError() << std::endl;
@@ -104,7 +104,7 @@ void Game::set_block_ul(const Coord &c, SDL_Rect &r) {
 }
   
 void Game::on_timer(uint32_t interval) {
-  if (a.game_running) {
+  if (a.game_running && !paused) {
     a.move_snake();
   }
 }
@@ -130,6 +130,11 @@ void Game::process_input_events() {
         a = Arena {};
         break;
       }
+      case SDLK_p: {
+        paused = !paused;
+        break;
+      }
+        
       case SDLK_ESCAPE: {
         running = false;
         break;
