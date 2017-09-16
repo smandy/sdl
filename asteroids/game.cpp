@@ -30,8 +30,8 @@ Game::Game() : game_running{true}, running{true} {
     exit(1);
   }
   window =
-      SDL_CreateWindow("Asteroids", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                       Field::WIDTH, Field::HEIGHT, SDL_WINDOW_SHOWN);
+      SDL_CreateWindow("Asteroids", SDL_WINDOWPOS_CENTERED,
+                       SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
 
   if (!window) {
     std::cout << "Error creating window " << SDL_GetError() << std::endl;
@@ -52,19 +52,18 @@ Game::Game() : game_running{true}, running{true} {
 void Game::draw() {
   static SDL_Rect r;
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-
   SDL_RenderClear(renderer);
   SDL_RenderPresent(renderer);
 }
 
-void Game::on_timer(uint32_t interval) {
-}
+void Game::on_timer(uint32_t interval) {}
 
 void Game::run() {
   running = true;
   while (running) {
-    f.draw(renderer, window);
     process_input_events();
+    f.apply_motion();
+    f.draw(renderer, window);
   }
   SDL_Quit();
 }
@@ -74,6 +73,24 @@ void Game::process_input_events() {
   uint32_t lastEvent;
   bool keyDown = false;
   int haveEvent = SDL_PollEvent(&event);
+
+  auto keys = SDL_GetKeyboardState(nullptr);
+
+  if (keys[SDL_SCANCODE_LEFT]) {
+    f.theta -= 5 * DEGREE_TO_RADIAN;
+  }
+
+  if (keys[SDL_SCANCODE_RIGHT]) {
+    f.theta += 5 * DEGREE_TO_RADIAN;
+  };
+
+  if (keys[SDL_SCANCODE_LCTRL]) {
+    auto dv = std::polar(0.2f, f.theta);
+    f.entities[SHIP_ID].velocity += dv;
+    std::cout << "dv is " << dv << std::endl;
+    std::cout << "Velocity now " << f.entities[SHIP_ID].velocity << std::endl;
+  };
+
   if (haveEvent) {
     if (event.type == SDL_KEYDOWN) {
       switch (event.key.keysym.sym) {
@@ -86,6 +103,9 @@ void Game::process_input_events() {
       }
       }
     }
+    if (event.type == SDL_KEYUP) {
+      std::cout << "WOot - key up" << std::endl;
+    };
 
     if (event.type == SDL_KEYDOWN && game_running) {
       switch (event.key.keysym.sym) {
@@ -102,11 +122,14 @@ void Game::process_input_events() {
         break;
       }
       case SDLK_RIGHT: {
-        f.theta += 5;
+        // f.theta += 5 * DEGREE_TO_RADIAN;
         break;
       }
+      case SDLK_LCTRL: {
+      }
+
       case SDLK_LEFT: {
-        f.theta -= 5;
+        // f.theta -= 5 * DEGREE_TO_RADIAN;
       }
       case SDLK_UP: {
       }

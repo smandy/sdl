@@ -23,3 +23,7 @@ i
 /asteroids/GPATH
 /asteroids/GRTAGS
 /asteroids/GTAGS
+#*#
+/asteroids/#Makefile#
+/asteroids/CMakeCache.txt
+/asteroids/cmake_install.cmake

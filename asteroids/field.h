@@ -1,22 +1,39 @@
 #pragma once
 
 #include "math.h"
-#include <cstdint>
+#include "types.h"
 #include <SDL.h>
+#include <array>
+#include <cstdint>
 
 namespace asteroids {
+struct Component {
+  bool active;
+  
+  Vec2 position;
+  Vec2 velocity;
+
+  Component()
+      : active{false}, position{WIDTH / 2, HEIGHT / 2},
+        velocity{} {}
+};
+
+struct Bullet {
+  uint8_t ttl;
+  Bullet() : ttl{10} {};
+};
+
 struct Field {
-  SDL_Point sloc;
-  uint16_t theta;
+  float theta;
 
-  static constexpr float DEGREE_TO_RADIAN = M_PI / 180;
+  std::array<Component, ENTITY_SIZE> entities;
+  std::array<Bullet, MAX_BULLETS> bullets;
 
+  void launch_bullet();
   void draw(SDL_Renderer *renderer, SDL_Window *window);
-  
-  static constexpr uint32_t WIDTH = 800;
-  static constexpr uint32_t HEIGHT = 800;
-  
+
+  void apply_motion();
+
   Field();
 };
-  
 }
