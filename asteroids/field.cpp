@@ -46,9 +46,9 @@ Field::Field()
     rots[i] = DEGREE_TO_RADIAN * (-5 + (rand() % 10));
   }
 
-  for (auto x : rots) {
-    std::cout << " ROt is " << x << std::endl;
-  }
+  // for (auto x : rots) {
+  //   std::cout << " ROt is " << x << std::endl;
+  // }
 }
 
 void Field::update_state() {
