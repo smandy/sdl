@@ -30,8 +30,8 @@ Game::Game() : game_running{true}, running{true} {
     exit(1);
   }
   window =
-      SDL_CreateWindow("Snake", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                       1200, 800, SDL_WINDOW_SHOWN);
+      SDL_CreateWindow("Asteroids", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                       Field::WIDTH, Field::HEIGHT, SDL_WINDOW_SHOWN);
 
   if (!window) {
     std::cout << "Error creating window " << SDL_GetError() << std::endl;
@@ -63,7 +63,7 @@ void Game::on_timer(uint32_t interval) {
 void Game::run() {
   running = true;
   while (running) {
-    draw();
+    f.draw(renderer, window);
     process_input_events();
   }
   SDL_Quit();
@@ -75,7 +75,6 @@ void Game::process_input_events() {
   bool keyDown = false;
   int haveEvent = SDL_PollEvent(&event);
   if (haveEvent) {
-
     if (event.type == SDL_KEYDOWN) {
       switch (event.key.keysym.sym) {
       case SDLK_r: {
@@ -103,13 +102,13 @@ void Game::process_input_events() {
         break;
       }
       case SDLK_RIGHT: {
+        f.theta += 5;
         break;
       }
       case SDLK_LEFT: {
-        break;
+        f.theta -= 5;
       }
       case SDLK_UP: {
-        break;
       }
       case SDLK_DOWN:
         break;

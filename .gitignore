@@ -20,3 +20,6 @@ i
 /tetris/main
 **/.sconsign.dblite
 /snake/main
+/asteroids/GPATH
+/asteroids/GRTAGS
+/asteroids/GTAGS
