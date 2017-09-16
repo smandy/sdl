@@ -12,7 +12,20 @@ namespace asteroids {
 Field::Field() : theta{} {};
   void Field::apply_motion() {
    for( auto& x : entities) {
-     x.position += x.velocity; 
+     x.position += x.velocity;
+     
+     if (x.position.real() < 0) {
+       x.position.real(x.position.real() + WIDTH);
+     };
+     if (x.position.real() > WIDTH) {
+       x.position.real(x.position.real() - WIDTH);
+     };
+     if (x.position.imag() < 0) {
+       x.position.imag(x.position.imag() + HEIGHT);
+     };
+     if (x.position.imag() > HEIGHT) {
+       x.position.imag(x.position.real() - HEIGHT);
+     };
    };
  };
   
