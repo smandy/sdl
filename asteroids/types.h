@@ -30,6 +30,8 @@ inline void to_point(Vec2 &vec, SDL_Rect &r) {
 };
 
 
+  static constexpr int NUM_POINTS = 7;
+  
 static constexpr uint32_t WIDTH = 800;
 static constexpr uint32_t HEIGHT = 800;
 
@@ -39,11 +41,12 @@ static constexpr uint8_t SHIP_ID = 0;
 static constexpr uint8_t ALIEN_ID = 1;
 
 static constexpr uint8_t MAX_BULLETS = 5;
-static constexpr uint8_t MAX_ASTEROIDS = 5;
+static constexpr uint8_t MAX_ASTEROIDS = 10;
 
 static constexpr uint8_t BULLET_OFFSET = ALIEN_ID + 1;
 static constexpr uint8_t ASTEROID_OFFSET = BULLET_OFFSET + MAX_BULLETS;
 static constexpr uint8_t ENTITY_SIZE = ASTEROID_OFFSET + MAX_ASTEROIDS;
 
 static constexpr float SHIP_SCALE = 0.3;
+static constexpr float ASTEROID_SCALE = 0.3;
 }

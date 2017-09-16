@@ -46,7 +46,13 @@ struct Field {
 
   void draw_ship(SDL_Renderer *renderer);
   void draw_bullets(SDL_Renderer *renderer);
+  void draw_asteroid(SDL_Renderer *renderer, size_t id);
 
+  std::vector<std::vector<Vec2>> asteroids;
+  std::vector<float> thetas;
+  std::vector<float> rots;
+
+  
   Field();
 };
 }
