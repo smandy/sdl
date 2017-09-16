@@ -15,8 +15,6 @@ class Game {
 public:
   Game();
 
-  void draw();
-
   void run();
 
   void process_input_events();

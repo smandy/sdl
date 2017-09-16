@@ -49,21 +49,14 @@ Game::Game() : game_running{true}, running{true} {
   SDL_TimerID my_timer_id = SDL_AddTimer(delay, my_timer_func, (void *)this);
 }
 
-void Game::draw() {
-  static SDL_Rect r;
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-  SDL_RenderClear(renderer);
-  SDL_RenderPresent(renderer);
-}
-
 void Game::on_timer(uint32_t interval) {}
 
 void Game::run() {
   running = true;
   while (running) {
     process_input_events();
-    f.apply_motion();
-    f.draw(renderer, window);
+    f.update_state();
+    f.draw(renderer);
   }
   SDL_Quit();
 }
@@ -87,8 +80,8 @@ void Game::process_input_events() {
   if (keys[SDL_SCANCODE_LCTRL]) {
     auto dv = std::polar(0.2f, f.theta);
     f.entities[SHIP_ID].velocity += dv;
-    std::cout << "dv is " << dv << std::endl;
-    std::cout << "Velocity now " << f.entities[SHIP_ID].velocity << std::endl;
+    //std::cout << "dv is " << dv << std::endl;
+    //std::cout << "Velocity now " << f.entities[SHIP_ID].velocity << std::endl;
   };
 
   if (haveEvent) {
@@ -104,11 +97,16 @@ void Game::process_input_events() {
       }
     }
     if (event.type == SDL_KEYUP) {
-      std::cout << "WOot - key up" << std::endl;
+      //std::cout << "WOot - key up" << std::endl;
     };
 
     if (event.type == SDL_KEYDOWN && game_running) {
       switch (event.key.keysym.sym) {
+      case SDLK_RETURN: {
+        //std::cout << "Fire bullet" << std::endl;
+        f.fire_bullet();
+        break;
+      }
       case SDLK_SPACE: {
         break;
       }
