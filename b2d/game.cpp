@@ -134,13 +134,11 @@ void Game::run() {
     b2Vec2 position = body->GetPosition();
     float32 angle = body->GetAngle();
 
-    printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
-
+    // printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
 
     SDL_Rect r;
-
     r.x = 400;
     r.y = 800 - 100 * position.y;
     r.w = 10;
@@ -150,7 +148,6 @@ void Game::run() {
 
     draw();
     process_input_events();
-    
     i++;
   }
   SDL_Quit();
