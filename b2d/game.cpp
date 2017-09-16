@@ -30,7 +30,7 @@ Game::Game() : game_running{true}, running{true} {
     exit(1);
   }
   window =
-      SDL_CreateWindow("Snake", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+      SDL_CreateWindow("B2d", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                        1200, 800, SDL_WINDOW_SHOWN);
 
   if (!window) {
