@@ -27,3 +27,4 @@ i
 /asteroids/#Makefile#
 /asteroids/CMakeCache.txt
 /asteroids/cmake_install.cmake
+/asteroids/main

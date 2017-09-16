@@ -40,7 +40,7 @@ static constexpr float DEGREE_TO_RADIAN = M_PI / 180;
 static constexpr uint8_t SHIP_ID = 0;
 static constexpr uint8_t ALIEN_ID = 1;
 
-static constexpr uint8_t MAX_BULLETS = 5;
+static constexpr uint8_t MAX_BULLETS = 15;
 static constexpr uint8_t MAX_ASTEROIDS = 10;
 
 static constexpr uint8_t BULLET_OFFSET = ALIEN_ID + 1;

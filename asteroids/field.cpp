@@ -9,7 +9,9 @@
 #include <math.h>
 
 namespace asteroids {
-  Field::Field() : theta{}, front{}, back{}, bullets{}, bullet_pool(MAX_BULLETS), rots(MAX_ASTEROIDS), thetas(MAX_ASTEROIDS) {
+Field::Field()
+    : theta{}, front{}, back{}, bullets{}, bullet_pool(MAX_BULLETS),
+      rots(MAX_ASTEROIDS), thetas(MAX_ASTEROIDS) {
   entities[SHIP_ID].active = true;
 
   auto entity_id = BULLET_OFFSET;
@@ -23,35 +25,36 @@ namespace asteroids {
 
     x.position.real(rand() % WIDTH);
     x.position.imag(rand() % WIDTH);
-    
+
     x.velocity.real(rand() % 5 - 3);
     x.velocity.imag(rand() % 5 - 3);
   }
 
   constexpr int NUM_POINTS = 7;
-  for (int n = 0;n<MAX_ASTEROIDS;++n) {
+  for (int n = 0; n < MAX_ASTEROIDS; ++n) {
     std::vector<Vec2> points;
     for (int i = 0; i < NUM_POINTS; ++i) {
-      auto randtheta = DEGREE_TO_RADIAN * ( rand() % 20 );
-      points.push_back({100.0f + rand() % 100, float( randtheta + (i * 2 * M_PI) / NUM_POINTS )});
+      auto randtheta = DEGREE_TO_RADIAN * (rand() % 20);
+      points.push_back({100.0f + rand() % 100,
+                        float(randtheta + (i * 2 * M_PI) / NUM_POINTS)});
     }
     points.push_back(points[0]);
     asteroids.push_back(points);
   }
 
-  for(int i = 0;i< MAX_ASTEROIDS;++i) {
+  for (int i = 0; i < MAX_ASTEROIDS; ++i) {
     rots[i] = DEGREE_TO_RADIAN * (-5 + (rand() % 10));
   }
 
-  for(auto x: rots) {
-    std::cout << " ROt is " << x  << std::endl;
+  for (auto x : rots) {
+    std::cout << " ROt is " << x << std::endl;
   }
 }
 
 void Field::update_state() {
   apply_motion();
   handle_bullets();
-}x
+}
 
 void Field::apply_motion() {
   for (auto &x : entities) {
@@ -73,7 +76,7 @@ void Field::apply_motion() {
     }
   }
 
-  for (int i = 0;i<MAX_ASTEROIDS;++i) {
+  for (int i = 0; i < MAX_ASTEROIDS; ++i) {
     thetas[i] += rots[i];
   }
 }
@@ -147,14 +150,14 @@ void Field::draw_bullets(SDL_Renderer *renderer) {
 }
 
 void Field::draw_asteroid(SDL_Renderer *renderer, size_t id) {
-  //std::cout << "Drawing " << id << std::endl;
+  // std::cout << "Drawing " << id << std::endl;
 
   // for( auto& x : points) {
   //   std::cout << x << std::endl;
   // };
 
   auto &points = asteroids[id];
-  std::array<SDL_Point, NUM_POINTS+1> sdl_points;
+  std::array<SDL_Point, NUM_POINTS + 1> sdl_points;
   std::transform(points.begin(), points.end(), sdl_points.begin(),
                  [&](auto &x) {
                    auto sloc = entities[ASTEROID_OFFSET + id].position;
