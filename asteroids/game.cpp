@@ -98,18 +98,13 @@ void Game::run() {
     }
 
     if (show_ctrl) {
-
       ImGui::SetNextWindowSize(ImVec2(400,200), ImGuiCond_FirstUseEver);
       ImGui::Begin("Asteroid controls");
-      ImGui::Text("Hello, world.");
-
-      //ImGui::InputFloat("ship scale", &Constants::ASTEROID_SCALE, 0.2f, 0.5f);
-      //ImGui::InputFloat("asteroid scale", &Constants::SHIP_SCALE, 0.2f, 0.5f);
+      ImGui::Text("Have a play.");
       
       ImGui::SliderFloat("ship scale", &Constants::SHIP_SCALE, 0.2f, 1.0f, "ship scale = %.3f");
       ImGui::SliderFloat("asteroid scale", &Constants::ASTEROID_SCALE, 0.2f, 1.0f, "asteroid scale = %.3f");
       ImGui::SliderInt("bullet size", &Constants::BULLET_WIDTH, 1,20, nullptr);
-
       
       ImGui::End();
     };

@@ -51,7 +51,6 @@ struct Field {
   std::vector<std::vector<Vec2>> asteroids;
   std::vector<float> thetas;
   std::vector<float> rots;
-
   
   Field();
 };
