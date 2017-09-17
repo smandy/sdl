@@ -21,6 +21,8 @@ public:
 
   bool game_running;
   bool running;
+  bool gui;
+  bool show_ctrl;
 
   void on_timer(uint32_t interval);
 

@@ -220,6 +220,10 @@ void Game::process_input_events() {
       case SDLK_a: {
         break;
       }
+      case SDLK_h: {
+        gui = !gui;
+        break;
+      }
       case SDLK_n: {
         break;
       }

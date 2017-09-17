@@ -5,9 +5,9 @@
 #include <iostream>
 #include <numeric>
 
+#include "GL/gl3w.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
-#include "GL/gl3w.h"
 #include <SDL.h>
 
 uint32_t my_timer_func(uint32_t interval, void *ctx) {
@@ -27,7 +27,7 @@ uint32_t my_timer_func(uint32_t interval, void *ctx) {
   return interval;
 }
 
-Game::Game() : game_running{true}, running{true} {
+Game::Game() : game_running{true}, running{true}, gui{false}, show_ctrl{false} {
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
     std::cout << "Error initializing sdl " << SDL_GetError() << std::endl;
@@ -57,13 +57,13 @@ Game::Game() : game_running{true}, running{true} {
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
   SDL_DisplayMode current;
   SDL_GetCurrentDisplayMode(0, &current);
-  
+
   SDL_GLContext glcontext = SDL_GL_CreateContext(window);
   gl3wInit();
   ImGui_ImplSdlGL2_Init(window);
 
   std::cout << "Woot" << std::endl;
-  
+
   if (!renderer) {
     std::cout << "Error creating renderer " << SDL_GetError() << std::endl;
     exit(1);
@@ -80,21 +80,38 @@ void Game::run() {
   ImVec4 clear_color = ImColor(114, 144, 154);
   while (running) {
     process_input_events();
-    f.update_state();
+    if (game_running) {
+      f.update_state();
+    }
     f.draw(renderer);
-    //SDL_RenderPresent(renderer);
-    
+    // SDL_RenderPresent(renderer);
     ImGui_ImplSdlGL2_NewFrame(window);
-    glUseProgram (0);
+    glUseProgram(0);
     ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
-    ImGui::ShowTestWindow();
+    
+    if (gui) {
+      ImGui::ShowTestWindow();
+    }
 
-    //glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
+    if (show_ctrl) {
+      ImGui::Begin("My window");
+      ImGui::Text("Hello, world.");
+
+      ImGui::InputFloat("ship scale", &Constants::ASTEROID_SCALE, 0.2f, 0.5f);
+      ImGui::InputFloat("asteroid scale", &Constants::SHIP_SCALE, 0.2f, 0.5f);
+ 
+      ImGui::End();
+    };
+
 
     ImGui::Render();
     SDL_GL_SwapWindow(window);
-    //glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-    //glClear(GL_COLOR_BUFFER_BIT);
+
+    // https://github.com/ocornut/imgui/issues/1116
+    // glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x,
+    // (int)ImGui::GetIO().DisplaySize.y);
+    // glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+    // glClear(GL_COLOR_BUFFER_BIT);
     SDL_RenderPresent(renderer);
   }
   SDL_Quit();
@@ -125,10 +142,25 @@ void Game::process_input_events() {
   };
 
   if (haveEvent) {
-    ImGui_ImplSdlGL2_ProcessEvent(&event);    
+
+    if (gui) {
+      ImGui_ImplSdlGL2_ProcessEvent(&event);
+    }
     if (event.type == SDL_KEYDOWN) {
       switch (event.key.keysym.sym) {
       case SDLK_r: {
+        break;
+      }
+      case SDLK_h: {
+        gui = !gui;
+        break;
+      }
+      case SDLK_w: {
+        show_ctrl = !show_ctrl;
+        break;
+      }
+      case SDLK_p: {
+        game_running = !game_running;
         break;
       }
       case SDLK_ESCAPE: {

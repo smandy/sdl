@@ -12,10 +12,10 @@ imgui = env.Object('imgui.cpp')
 imgui_impl_sdl_gl3 = env.Object('imgui_impl_sdl_gl3.cpp')
 imgui_impl_sdl = env.Object('imgui_impl_sdl.cpp')
 gl3w =  env.Object('GL/gl3w.c')
+types = env.Object('types.cpp')
+# /home/andy/repos/imgui/examples/sdl_opengl3_example/imgui_impl_sdl_gl3.cpp /home/andy/repos/imgui/examples/sdl_opengl3_example/imgui_impl_sdl_gl3.h
 
-#/home/andy/repos/imgui/examples/sdl_opengl3_example/imgui_impl_sdl_gl3.cpp /home/andy/repos/imgui/examples/sdl_opengl3_example/imgui_impl_sdl_gl3.h
-
-main = env.Program('main' , ['main.cpp',game, field, imgui, imgui_demo, imgui_draw, gl3w, imgui_impl_sdl] )
+main = env.Program('main' , ['main.cpp',game, field, imgui, imgui_demo, imgui_draw, gl3w, imgui_impl_sdl, types] )
 
 #example = env.Program('example', ['example.cpp', imgui, imgui_demo, imgui_draw, gl3w, imgui_impl_sdl_gl3] )
 

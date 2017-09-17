@@ -88,7 +88,7 @@ void Field::fire_bullet() {
     Vec2 head_of_ship = {100, 0};
     auto sloc = entities[SHIP_ID].position;
     auto rel = std::polar(head_of_ship.real(), head_of_ship.imag() + theta);
-    auto tip_of_ship = sloc + SHIP_SCALE * rel;
+    auto tip_of_ship = sloc + Constants::SHIP_SCALE * rel;
     auto velocity = entities[SHIP_ID].velocity;
     auto dv = std::polar(10.0f, theta);
     auto bullet_velocity = velocity + dv;
@@ -164,7 +164,7 @@ void Field::draw_asteroid(SDL_Renderer *renderer, size_t id) {
                    auto rel = std::polar(x.real(), x.imag() + thetas[id]);
                    // std::cout << "rel is " << rel << std::endl;
                    SDL_Point ret;
-                   to_point(sloc + ASTEROID_SCALE * rel, ret);
+                   to_point(sloc + Constants::ASTEROID_SCALE * rel, ret);
                    return ret;
                  });
   SDL_RenderDrawLines(renderer, sdl_points.data(), sdl_points.size());
@@ -183,7 +183,7 @@ void Field::draw_ship(SDL_Renderer *renderer) {
                    auto rel = std::polar(x.real(), x.imag() + theta);
                    // std::cout << "rel is " << rel << std::endl;
                    SDL_Point ret;
-                   to_point(sloc + SHIP_SCALE * rel, ret);
+                   to_point(sloc + Constants::SHIP_SCALE * rel, ret);
                    return ret;
                  });
   SDL_RenderDrawLines(renderer, sdl_points.data(), sdl_points.size());
