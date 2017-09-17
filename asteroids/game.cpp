@@ -90,7 +90,7 @@ void Game::run() {
     f.draw(renderer);
     // SDL_RenderPresent(renderer);
     ImGui_ImplSdlGL2_NewFrame(window);
-    glUseProgram(0);
+    
     ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
     
     if (gui) {
@@ -114,9 +114,9 @@ void Game::run() {
       ImGui::End();
     };
 
-
+    glUseProgram(0);
     ImGui::Render();
-    SDL_GL_SwapWindow(window);
+    //SDL_GL_SwapWindow(window);
 
     // https://github.com/ocornut/imgui/issues/1116
     // glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x,
