@@ -29,3 +29,5 @@ i
 /asteroids/cmake_install.cmake
 /asteroids/main
 /vortex_main
+/b2d/main
+asteroids/CMakeFiles

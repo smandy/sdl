@@ -10,6 +10,7 @@
  class MyContactListener : public b2ContactListener
   {
     void BeginContact(b2Contact* contact) {
+      std::cout << "Begin contact" << std::endl;
   
       //check if fixture A was a ball
       void* bodyUserData = contact->GetFixtureA()->GetBody()->GetUserData();
@@ -24,7 +25,7 @@
     }
   
     void EndContact(b2Contact* contact) {
-  
+      std::cout << "End contact" << std::endl;
       //check if fixture A was a ball
       void* bodyUserData = contact->GetFixtureA()->GetBody()->GetUserData();
       if ( bodyUserData )
@@ -100,6 +101,11 @@ void Game::run() {
 
   // Construct a world object, which will hold and simulate the rigid bodies.
   b2World world(gravity);
+
+  MyContactListener myContactListenerInstance;
+  
+  //in FooTest constructor
+  m_world->SetContactListener(&myContactListenerInstance);
 
   // Define the ground body.
   b2BodyDef groundBodyDef;

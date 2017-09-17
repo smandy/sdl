@@ -1,10 +1,14 @@
 #include "game.h"
 
-#include <SDL.h>
 #include <algorithm>
 #include <functional>
 #include <iostream>
 #include <numeric>
+
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
+#include "GL/gl3w.h"
+#include <SDL.h>
 
 uint32_t my_timer_func(uint32_t interval, void *ctx) {
   // std::cout << "My Timer" << std::endl;
@@ -29,18 +33,37 @@ Game::Game() : game_running{true}, running{true} {
     std::cout << "Error initializing sdl " << SDL_GetError() << std::endl;
     exit(1);
   }
-  window =
-      SDL_CreateWindow("Asteroids", SDL_WINDOWPOS_CENTERED,
-                       SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
 
+  // SDL_Window *window = SDL_CreateWindow("ImGui SDL2+OpenGL3 example",
+  // SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720,
+  // SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
+  window = SDL_CreateWindow("Asteroids", SDL_WINDOWPOS_CENTERED,
+                            SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT,
+                            SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
   if (!window) {
     std::cout << "Error creating window " << SDL_GetError() << std::endl;
     exit(1);
   }
-
   renderer = SDL_CreateRenderer(
       window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS,
+                      SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+  SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+  SDL_DisplayMode current;
+  SDL_GetCurrentDisplayMode(0, &current);
+  
+  SDL_GLContext glcontext = SDL_GL_CreateContext(window);
+  gl3wInit();
+  ImGui_ImplSdlGL2_Init(window);
+
+  std::cout << "Woot" << std::endl;
+  
   if (!renderer) {
     std::cout << "Error creating renderer " << SDL_GetError() << std::endl;
     exit(1);
@@ -53,10 +76,26 @@ void Game::on_timer(uint32_t interval) {}
 
 void Game::run() {
   running = true;
+
+  ImVec4 clear_color = ImColor(114, 144, 154);
   while (running) {
     process_input_events();
     f.update_state();
     f.draw(renderer);
+    //SDL_RenderPresent(renderer);
+    
+    ImGui_ImplSdlGL2_NewFrame(window);
+    glUseProgram (0);
+    ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
+    ImGui::ShowTestWindow();
+
+    //glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
+
+    ImGui::Render();
+    SDL_GL_SwapWindow(window);
+    //glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+    //glClear(GL_COLOR_BUFFER_BIT);
+    SDL_RenderPresent(renderer);
   }
   SDL_Quit();
 }
@@ -80,11 +119,13 @@ void Game::process_input_events() {
   if (keys[SDL_SCANCODE_LCTRL]) {
     auto dv = std::polar(0.2f, f.theta);
     f.entities[SHIP_ID].velocity += dv;
-    //std::cout << "dv is " << dv << std::endl;
-    //std::cout << "Velocity now " << f.entities[SHIP_ID].velocity << std::endl;
+    // std::cout << "dv is " << dv << std::endl;
+    // std::cout << "Velocity now " << f.entities[SHIP_ID].velocity <<
+    // std::endl;
   };
 
   if (haveEvent) {
+    ImGui_ImplSdlGL2_ProcessEvent(&event);    
     if (event.type == SDL_KEYDOWN) {
       switch (event.key.keysym.sym) {
       case SDLK_r: {
@@ -97,13 +138,13 @@ void Game::process_input_events() {
       }
     }
     if (event.type == SDL_KEYUP) {
-      //std::cout << "WOot - key up" << std::endl;
+      // std::cout << "WOot - key up" << std::endl;
     };
 
     if (event.type == SDL_KEYDOWN && game_running) {
       switch (event.key.keysym.sym) {
       case SDLK_RETURN: {
-        //std::cout << "Fire bullet" << std::endl;
+        // std::cout << "Fire bullet" << std::endl;
         f.fire_bullet();
         break;
       }

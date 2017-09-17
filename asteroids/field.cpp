@@ -131,7 +131,7 @@ void Field::draw(SDL_Renderer *renderer) {
   for (int i = 0; i < MAX_ASTEROIDS; ++i) {
     draw_asteroid(renderer, i);
   };
-  SDL_RenderPresent(renderer);
+
 }
 
 template <typename T> struct TR;
