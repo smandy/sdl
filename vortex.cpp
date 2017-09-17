@@ -14,7 +14,7 @@ Vortex::Vortex() : myVec{} {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cout << "Error initializing sdl " << SDL_GetError() << std::endl;
     exit(1);
-  }
+  };
   window =
       SDL_CreateWindow("Vortex", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                        1000, 1000, SDL_WINDOW_SHOWN);
@@ -26,7 +26,7 @@ Vortex::Vortex() : myVec{} {
 
   renderer = SDL_CreateRenderer(
       window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-  (!renderer) {
+  if (!renderer) {
     std::cout << "Error creating renderer " << SDL_GetError() << std::endl;
     exit(1);
   };
