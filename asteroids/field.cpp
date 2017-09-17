@@ -7,6 +7,7 @@
 #include "SDL.h"
 #include <iostream>
 #include <math.h>
+#include "assert.h"
 
 namespace asteroids {
 Field::Field() : theta{}, front{}, back{}, bullets{}, bullet_pool(MAX_BULLETS) {
@@ -32,9 +33,10 @@ Field::Field() : theta{}, front{}, back{}, bullets{}, bullet_pool(MAX_BULLETS) {
       auto randtheta = DEGREE_TO_RADIAN * (rand() % 20);
       points.push_back({100.0f + rand() % 100,
                         float(randtheta + (i * 2 * M_PI) / NUM_POINTS)});
+      assert( points[0].imag() < (2 * M_PI) );
     }
     points.push_back(points[0]);
-    asteroids.push_back({entity_id, std::move(points), rot});
+    asteroids.push_back( {entity_id, std::move(points), rot} );
   }
 }
 
