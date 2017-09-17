@@ -27,6 +27,10 @@ uint32_t my_timer_func(uint32_t interval, void *ctx) {
   return interval;
 }
 
+Game::~Game() {
+  ImGui_ImplSdlGL2_Shutdown();
+};
+
 Game::Game() : game_running{true}, running{true}, gui{false}, show_ctrl{false} {
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
@@ -94,12 +98,19 @@ void Game::run() {
     }
 
     if (show_ctrl) {
-      ImGui::Begin("My window");
+
+      ImGui::SetNextWindowSize(ImVec2(400,200), ImGuiCond_FirstUseEver);
+      ImGui::Begin("Asteroid controls");
       ImGui::Text("Hello, world.");
 
-      ImGui::InputFloat("ship scale", &Constants::ASTEROID_SCALE, 0.2f, 0.5f);
-      ImGui::InputFloat("asteroid scale", &Constants::SHIP_SCALE, 0.2f, 0.5f);
- 
+      //ImGui::InputFloat("ship scale", &Constants::ASTEROID_SCALE, 0.2f, 0.5f);
+      //ImGui::InputFloat("asteroid scale", &Constants::SHIP_SCALE, 0.2f, 0.5f);
+      
+      ImGui::SliderFloat("ship scale", &Constants::SHIP_SCALE, 0.2f, 1.0f, "ship scale = %.3f");
+      ImGui::SliderFloat("asteroid scale", &Constants::ASTEROID_SCALE, 0.2f, 1.0f, "asteroid scale = %.3f");
+      ImGui::SliderInt("bullet size", &Constants::BULLET_WIDTH, 1,20, nullptr);
+
+      
       ImGui::End();
     };
 

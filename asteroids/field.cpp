@@ -137,7 +137,7 @@ void Field::draw(SDL_Renderer *renderer) {
 template <typename T> struct TR;
 
 void Field::draw_bullets(SDL_Renderer *renderer) {
-  static SDL_Rect r = {0, 0, 10, 10};
+  SDL_Rect r = {0, 0, Constants::BULLET_WIDTH, Constants::BULLET_WIDTH };
   static std::vector<SDL_Rect> rects(MAX_BULLETS);
   rects.clear();
   for (auto &x : bullets) {
