@@ -9,9 +9,7 @@
 #include <math.h>
 
 namespace asteroids {
-Field::Field()
-    : theta{}, front{}, back{}, bullets{}, bullet_pool(MAX_BULLETS),
-      rots(MAX_ASTEROIDS), thetas(MAX_ASTEROIDS) {
+Field::Field() : theta{}, front{}, back{}, bullets{}, bullet_pool(MAX_BULLETS) {
   entities[SHIP_ID].active = true;
 
   auto entity_id = BULLET_OFFSET;
@@ -20,17 +18,15 @@ Field::Field()
   }
 
   for (int i = 0; i < MAX_ASTEROIDS; ++i) {
-    auto &x = entities[ASTEROID_OFFSET + i];
+    uint32_t entity_id = ASTEROID_OFFSET + i;
+    auto rot = DEGREE_TO_RADIAN * (-5 + (rand() % 10));
+    auto &x = entities[entity_id];
     x.active = true;
     x.position.real(rand() % WIDTH);
     x.position.imag(rand() % WIDTH);
-
     x.velocity.real(rand() % 5 - 3);
     x.velocity.imag(rand() % 5 - 3);
-  }
 
-  constexpr int NUM_POINTS = 7;
-  for (int n = 0; n < MAX_ASTEROIDS; ++n) {
     std::vector<Vec2> points;
     for (int i = 0; i < NUM_POINTS; ++i) {
       auto randtheta = DEGREE_TO_RADIAN * (rand() % 20);
@@ -38,15 +34,8 @@ Field::Field()
                         float(randtheta + (i * 2 * M_PI) / NUM_POINTS)});
     }
     points.push_back(points[0]);
-    asteroids.push_back(points);
+    asteroids.push_back({entity_id, std::move(points), rot});
   }
-
-  for (int i = 0; i < MAX_ASTEROIDS; ++i) {
-    rots[i] = DEGREE_TO_RADIAN * (-5 + (rand() % 10));
-  }
-  // for (auto x : rots) {
-  //   std::cout << " ROt is " << x << std::endl;
-  // }
 }
 
 void Field::update_state() {
@@ -74,9 +63,9 @@ void Field::apply_motion() {
     }
   }
 
-  for (int i = 0; i < MAX_ASTEROIDS; ++i) {
-    thetas[i] += rots[i];
-  }
+  for (auto &x : asteroids) {
+    x.theta += x.rot;
+  };
 }
 
 void Field::fire_bullet() {
@@ -126,9 +115,9 @@ void Field::draw(SDL_Renderer *renderer) {
   draw_ship(renderer);
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
   draw_bullets(renderer);
-  for (int i = 0; i < MAX_ASTEROIDS; ++i) {
-    draw_asteroid(renderer, i);
-  };
+
+  std::for_each(std::begin(asteroids), std::end(asteroids),
+                [&renderer, this](auto &d) { draw_asteroid(renderer, d); });
 }
 
 template <typename T> struct TR;
@@ -146,17 +135,16 @@ void Field::draw_bullets(SDL_Renderer *renderer) {
   SDL_RenderFillRects(renderer, rects.data(), rects.size());
 }
 
-void Field::draw_asteroid(SDL_Renderer *renderer, size_t id) {
+void Field::draw_asteroid(SDL_Renderer *renderer, Asteroid &d) {
   // std::cout << "Drawing " << id << std::endl;
   // for( auto& x : points) {
   //   std::cout << x << std::endl;
   // };
-  auto &points = asteroids[id];
   std::array<SDL_Point, NUM_POINTS + 1> sdl_points;
-  std::transform(points.begin(), points.end(), sdl_points.begin(),
+  std::transform(d.coords.begin(), d.coords.end(), sdl_points.begin(),
                  [&](auto &x) {
-                   auto sloc = entities[ASTEROID_OFFSET + id].position;
-                   auto rel = std::polar(x.real(), x.imag() + thetas[id]);
+                   auto sloc = entities[d.entity_id].position;
+                   auto rel = std::polar(x.real(), x.imag() + d.theta);
                    // std::cout << "rel is " << rel << std::endl;
                    SDL_Point ret;
                    to_point(sloc + Constants::ASTEROID_SCALE * rel, ret);
