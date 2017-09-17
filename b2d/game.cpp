@@ -7,6 +7,38 @@
 #include <iostream>
 #include <numeric>
 
+ class MyContactListener : public b2ContactListener
+  {
+    void BeginContact(b2Contact* contact) {
+  
+      //check if fixture A was a ball
+      void* bodyUserData = contact->GetFixtureA()->GetBody()->GetUserData();
+      if ( bodyUserData )
+        static_cast<Ball*>( bodyUserData )->startContact();
+  
+      //check if fixture B was a ball
+      bodyUserData = contact->GetFixtureB()->GetBody()->GetUserData();
+      // if ( bodyUserData )
+      //   static_cast<Ball*>( bodyUserData )->startContact();
+  
+    }
+  
+    void EndContact(b2Contact* contact) {
+  
+      //check if fixture A was a ball
+      void* bodyUserData = contact->GetFixtureA()->GetBody()->GetUserData();
+      if ( bodyUserData )
+        static_cast<Ball*>( bodyUserData )->endContact();
+  
+      //check if fixture B was a ball
+      bodyUserData = contact->GetFixtureB()->GetBody()->GetUserData();
+      // if ( bodyUserData )
+      //   static_cast<Ball*>( bodyUserData )->endContact();
+  
+    }
+  };
+
+
 uint32_t my_timer_func(uint32_t interval, void *ctx) {
   // std::cout << "My Timer" << std::endl;
   SDL_Event event;
@@ -125,7 +157,6 @@ void Game::run() {
     // It is generally best to keep the time step and iterations fixed.
 
     auto newt = SDL_GetTicks();
-
     auto dt = newt - time;
     time = newt;
     world.Step(dt / 1000.0, velocityIterations, positionIterations);
