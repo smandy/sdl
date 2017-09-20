@@ -7,38 +7,6 @@
 #include <iostream>
 #include <numeric>
 
- class MyContactListener : public b2ContactListener
-  {
-    void BeginContact(b2Contact* contact) {
-      std::cout << "Begin contact" << std::endl;
-  
-      //check if fixture A was a ball
-      void* bodyUserData = contact->GetFixtureA()->GetBody()->GetUserData();
-      if ( bodyUserData )
-        static_cast<Ball*>( bodyUserData )->startContact();
-  
-      //check if fixture B was a ball
-      bodyUserData = contact->GetFixtureB()->GetBody()->GetUserData();
-      // if ( bodyUserData )
-      //   static_cast<Ball*>( bodyUserData )->startContact();
-  
-    }
-  
-    void EndContact(b2Contact* contact) {
-      std::cout << "End contact" << std::endl;
-      //check if fixture A was a ball
-      void* bodyUserData = contact->GetFixtureA()->GetBody()->GetUserData();
-      if ( bodyUserData )
-        static_cast<Ball*>( bodyUserData )->endContact();
-  
-      //check if fixture B was a ball
-      bodyUserData = contact->GetFixtureB()->GetBody()->GetUserData();
-      // if ( bodyUserData )
-      //   static_cast<Ball*>( bodyUserData )->endContact();
-  
-    }
-  };
-
 
 uint32_t my_timer_func(uint32_t interval, void *ctx) {
   // std::cout << "My Timer" << std::endl;
@@ -102,10 +70,10 @@ void Game::run() {
   // Construct a world object, which will hold and simulate the rigid bodies.
   b2World world(gravity);
 
-  MyContactListener myContactListenerInstance;
+  //MyContactListener myContactListenerInstance;
   
   //in FooTest constructor
-  m_world->SetContactListener(&myContactListenerInstance);
+  //m_world->SetContactListener(&myContactListenerInstance);
 
   // Define the ground body.
   b2BodyDef groundBodyDef;
@@ -177,9 +145,9 @@ void Game::run() {
 
     SDL_Rect r;
     r.x = 400;
-    r.y = 800 - 100 * position.y;
-    r.w = 10;
-    r.h = 10;
+    r.y = 800 - 200 * position.y;
+    r.w = 30;
+    r.h = 30;
     SDL_RenderFillRect(renderer, &r);
     SDL_RenderPresent(renderer);
 
@@ -190,6 +158,7 @@ void Game::run() {
   SDL_Quit();
 }
 
+
 void Game::process_input_events() {
   SDL_Event event;
   uint32_t lastEvent;
@@ -199,6 +168,7 @@ void Game::process_input_events() {
 
     if (event.type == SDL_KEYDOWN) {
       switch (event.key.keysym.sym) {
+
       case SDLK_r: {
         break;
       }
@@ -221,7 +191,6 @@ void Game::process_input_events() {
         break;
       }
       case SDLK_h: {
-        gui = !gui;
         break;
       }
       case SDLK_n: {

@@ -40,11 +40,12 @@ static constexpr uint8_t SHIP_ID = 0;
 static constexpr uint8_t ALIEN_ID = 1;
 
 static constexpr uint8_t MAX_BULLETS = 15;
-static constexpr uint8_t MAX_ASTEROIDS = 10;
+static constexpr uint8_t MAX_ASTEROIDS = 1;
 
 static constexpr uint8_t BULLET_OFFSET = ALIEN_ID + 1;
 static constexpr uint8_t ASTEROID_OFFSET = BULLET_OFFSET + MAX_BULLETS;
 static constexpr uint8_t ENTITY_SIZE = ASTEROID_OFFSET + MAX_ASTEROIDS;
+
 struct Constants {
   static float SHIP_SCALE;
   static float ASTEROID_SCALE;

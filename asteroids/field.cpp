@@ -67,7 +67,7 @@ void Field::apply_motion() {
 
   for (auto &x : asteroids) {
     x.theta += x.rot;
-  };
+  }
 }
 
 void Field::fire_bullet() {

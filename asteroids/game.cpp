@@ -66,8 +66,7 @@ Game::Game() : game_running{true}, running{true}, gui{false}, show_ctrl{false} {
   gl3wInit();
   ImGui_ImplSdlGL2_Init(window);
 
-  std::cout << "Woot" << std::endl;
-
+  // std::cout << "Woot" << std::endl;
   if (!renderer) {
     std::cout << "Error creating renderer " << SDL_GetError() << std::endl;
     exit(1);
@@ -80,24 +79,23 @@ void Game::on_timer(uint32_t interval) {}
 
 void Game::run() {
   running = true;
-
-  ImVec4 clear_color = ImColor(114, 144, 154);
   while (running) {
     process_input_events();
+    
     if (game_running) {
       f.update_state();
     }
+    
     f.draw(renderer);
     // SDL_RenderPresent(renderer);
     ImGui_ImplSdlGL2_NewFrame(window);
-    
-    ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
     
     if (gui) {
       ImGui::ShowTestWindow();
     }
 
     if (show_ctrl) {
+      ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
       ImGui::SetNextWindowSize(ImVec2(400,200), ImGuiCond_FirstUseEver);
       ImGui::Begin("Asteroid controls");
       ImGui::Text("Have a play.");
@@ -105,19 +103,11 @@ void Game::run() {
       ImGui::SliderFloat("ship scale", &Constants::SHIP_SCALE, 0.2f, 1.0f, "ship scale = %.3f");
       ImGui::SliderFloat("asteroid scale", &Constants::ASTEROID_SCALE, 0.2f, 1.0f, "asteroid scale = %.3f");
       ImGui::SliderInt("bullet size", &Constants::BULLET_WIDTH, 1,20, nullptr);
-      
       ImGui::End();
     };
 
     glUseProgram(0);
     ImGui::Render();
-    //SDL_GL_SwapWindow(window);
-
-    // https://github.com/ocornut/imgui/issues/1116
-    // glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x,
-    // (int)ImGui::GetIO().DisplaySize.y);
-    // glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-    // glClear(GL_COLOR_BUFFER_BIT);
     SDL_RenderPresent(renderer);
   }
   SDL_Quit();
