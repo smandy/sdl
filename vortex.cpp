@@ -14,22 +14,21 @@ Vortex::Vortex() : myVec{} {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cout << "Error initializing sdl " << SDL_GetError() << std::endl;
     exit(1);
-  };
-  window =
-      SDL_CreateWindow("Vortex", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+  }
+  window = SDL_CreateWindow("Vortex", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                        1000, 1000, SDL_WINDOW_SHOWN);
 
   if (!window) {
     std::cout << "Error creating window " << SDL_GetError() << std::endl;
     exit(1);
-  };
+  }
 
   renderer = SDL_CreateRenderer(
       window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   if (!renderer) {
     std::cout << "Error creating renderer " << SDL_GetError() << std::endl;
     exit(1);
-  };
+  }
 };
 
 void Vortex::drawVortex(float degreeOffset, float lengthFraction) {
@@ -43,7 +42,7 @@ void Vortex::drawVortex(float degreeOffset, float lengthFraction) {
     l *= lengthFraction;
   };
   SDL_RenderDrawLines(renderer, myVec.data(), myVec.size());
-};
+}
 
 void Vortex::drawScene(float degreeOffset, float lengthFraction) {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
@@ -94,4 +93,4 @@ void Vortex::run() {
     }
   }
   SDL_Quit();
-};
+}

@@ -15,7 +15,6 @@ struct Arena {
   Arena();
 
   void on_timer();
-
   void draw();
 
   std::deque<Coord> segments;
