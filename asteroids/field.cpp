@@ -127,11 +127,13 @@ template <typename T> struct TR;
 void Field::draw_bullets(SDL_Renderer *renderer) {
   SDL_Rect r = {0, 0, Constants::BULLET_WIDTH, Constants::BULLET_WIDTH};
   static std::vector<SDL_Rect> rects(MAX_BULLETS);
+  Vec2 offset = { - Constants::BULLET_WIDTH / 2.0f, -Constants::BULLET_WIDTH / 2.0f };
+  //Vec2 offset = 
   rects.clear();
   for (auto &x : bullets) {
     auto &entity = entities[x.entity_id];
     // TR<decltype(&entity.position)> fail;
-    to_point(entity.position, r);
+    to_point(entity.position + offset , r);
     rects.push_back(r);
   }
   SDL_RenderFillRects(renderer, rects.data(), rects.size());

@@ -261,8 +261,7 @@ void Game::process_input_events() {
         antigravity = !antigravity;
         break;
       }
-      cas
-          e SDLK_n: {
+      case SDLK_n: {
         init_tetr();
         break;
       }

@@ -1,4 +1,4 @@
-#include "game.h"
+c#include "game.h"
 
 #include "Box2D/Box2D.h"
 #include <SDL.h>
@@ -12,7 +12,7 @@ uint32_t my_timer_func(uint32_t interval, void *ctx) {
   // std::cout << "My Timer" << std::endl;
   SDL_Event event;
   SDL_UserEvent userevent;
-  /* In this example, our callback pushes an SDL_USEREVENT event
+  /* In this example, our callback pushes an SDL_USEREVENT remevent
      into the queue, and causes our callback to be called again at the
      same interval: */
   userevent.type = SDL_USEREVENT;

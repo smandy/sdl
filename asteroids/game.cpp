@@ -27,9 +27,7 @@ uint32_t my_timer_func(uint32_t interval, void *ctx) {
   return interval;
 }
 
-Game::~Game() {
-  ImGui_ImplSdlGL2_Shutdown();
-};
+Game::~Game() { ImGui_ImplSdlGL2_Shutdown(); };
 
 Game::Game() : game_running{true}, running{true}, gui{false}, show_ctrl{false} {
 
@@ -81,28 +79,31 @@ void Game::run() {
   running = true;
   while (running) {
     process_input_events();
-    
+
     if (game_running) {
       f.update_state();
     }
-    
+
     f.draw(renderer);
     // SDL_RenderPresent(renderer);
     ImGui_ImplSdlGL2_NewFrame(window);
-    
+
     if (gui) {
       ImGui::ShowTestWindow();
     }
 
     if (show_ctrl) {
       ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
-      ImGui::SetNextWindowSize(ImVec2(400,200), ImGuiCond_FirstUseEver);
+      ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_FirstUseEver);
       ImGui::Begin("Asteroid controls");
       ImGui::Text("Have a play.");
-      
-      ImGui::SliderFloat("ship scale", &Constants::SHIP_SCALE, 0.2f, 1.0f, "ship scale = %.3f");
-      ImGui::SliderFloat("asteroid scale", &Constants::ASTEROID_SCALE, 0.2f, 1.0f, "asteroid scale = %.3f");
-      ImGui::SliderInt("bullet size", &Constants::BULLET_WIDTH, 1,20, nullptr);
+
+      ImGui::SliderFloat("ship scale", &Constants::SHIP_SCALE, 0.2f, 1.0f,
+                         "ship scale = %.3f");
+      ImGui::SliderFloat("asteroid scale", &Constants::ASTEROID_SCALE, 0.2f,
+                         1.0f, "asteroid scale = %.3f");
+      ImGui::SliderInt("bullet size", &Constants::BULLET_WIDTH, 1, 20, nullptr);
+      ImGui::SliderInt("theta incr", &Constants::THETA_INCR, 1, 10, nullptr);
       ImGui::End();
     };
 
@@ -122,11 +123,11 @@ void Game::process_input_events() {
   auto keys = SDL_GetKeyboardState(nullptr);
 
   if (keys[SDL_SCANCODE_LEFT]) {
-    f.theta -= 5 * DEGREE_TO_RADIAN;
+    f.theta -= Constants::THETA_INCR * DEGREE_TO_RADIAN;
   }
 
   if (keys[SDL_SCANCODE_RIGHT]) {
-    f.theta += 5 * DEGREE_TO_RADIAN;
+    f.theta += Constants::THETA_INCR * DEGREE_TO_RADIAN;
   };
 
   if (keys[SDL_SCANCODE_LCTRL]) {
