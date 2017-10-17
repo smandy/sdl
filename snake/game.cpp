@@ -74,19 +74,18 @@ void Game::draw() {
     }
     draw_block(*x);
   };
-
   SDL_SetRenderDrawColor(renderer, 255, 255, 0, 0);
 
-  // for (int8_t y = 0;y<Y_BLOCKS;++y) {
-  //   for( int8_t x = 0;x<X_BLOCKS;++x) {
-  //     if ( a.grid[y][x] != CellType::EMPTY) {
-  //       draw_block( { x, y } );
-  //     }
-  //   };
-  // };
-  
   SDL_SetRenderDrawColor(renderer, 0, 255, 255, 0);
-  draw_block(a.m);
+  for (int8_t y = 0;y<Y_BLOCKS;++y) {
+      for( int8_t x = 0;x<X_BLOCKS;++x) {
+     if ( a.grid[y][x] == CellType::MUSHROOM) {
+         draw_block( { x, y } );
+       }
+     };
+   };
+  
+  //draw_block(a.m);
   SDL_RenderPresent(renderer);
 }
 

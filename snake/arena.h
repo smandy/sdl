@@ -29,7 +29,7 @@ struct Arena {
   bool game_running;
   void maybe_switch_direction(const Coord &new_direction);
 
-  Coord m;
+    //Coord m;
   CellType grid_value(const Coord &);
   void set_point(const Coord &, CellType);
 };
