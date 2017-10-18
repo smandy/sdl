@@ -16,7 +16,7 @@ Automata::Automata()
               for (int j = 0;j<size_x;++j) {
                   auto bitpos = pr[(j + 1) % size_x] + pr[j] * 2 + pr[(j-1) % size_x ] * 4;
                   //std::cout  << "Bit pos is " << bitpos << std::endl;
-                  row[j] = (rule & (1 << bitpos) ) >> bitpos;
+                  row[j] = (rule >> bitpos) & 1;
                   //std::cout << "Row val is " << std::to_string(row[j]) << std::endl;
               };
           };
