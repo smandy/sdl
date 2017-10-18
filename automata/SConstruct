@@ -1,11 +1,15 @@
-env = Environment(LIBS=['SDLmain', 'SDL2'] ,
-    CPPFLAGS=['-std=c++1y', '-g'],
+env = Environment(LIBS=['SDLmain', 'SDL2', 'dl', 'GL'],
                   LIBPATH = ['/usr/lib/x86_64-linux-gnu'],
                   CPPPATH=['/usr/include/SDL2'])
 
-game = env.Object('game.cpp')
+cenv = env.Clone(CPPFLAGS = ['--std=c++1y'])
 
-main = env.Program('main' , ['main.cpp',game])
+
+objects = [cenv.Object("%s.cpp" % x) for x in ['game','field','imgui_demo','imgui_draw','imgui','imgui_impl_sdl', 'types', 'main' ] ]
+gl3w = env.Object('GL/gl3w.c')
+
+main = env.Program('main' , objects + [gl3w])
+
 
 
 

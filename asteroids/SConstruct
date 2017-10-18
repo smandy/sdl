@@ -6,15 +6,6 @@ env = Environment(LIBS=['SDLmain', 'SDL2', 'dl', 'GL'],
 objects = [env.Object("%s.cpp" % x) for x in ['game','field','imgui_demo','imgui_draw','imgui','imgui_impl_sdl', 'types', 'main' ] ]
 gl3w = env.Object('GL/gl3w.c')
 
-# game = env.Object('game.cpp')
-# field = env.Object('field.cpp')
-# imgui_demo = env.Object('imgui_demo.cpp')
-# imgui_draw = env.Object('imgui_draw.cpp')
-# imgui = env.Object('imgui.cpp')
-# imgui_impl_sdl = env.Object('imgui_impl_sdl.cpp')
-# gl3w =  env.Object('GL/gl3w.c')
-# types = env.Object('types.cpp')
-
 main = env.Program('main' , objects + [gl3w])
 
 
