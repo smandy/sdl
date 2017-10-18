@@ -20,8 +20,6 @@ using RowType = std::array< CellType, X_BLOCKS >;
 using GridType = std::array< RowType, Y_BLOCKS >;
 
 struct Constants {
-  static float SHIP_SCALE;
-  static float ASTEROID_SCALE;
-  static int BULLET_WIDTH;
-    static int THETA_INCR;
+    static int32_t DEFAULT_RULE;
+    static uint32_t BLOCK_SIZE;
 };

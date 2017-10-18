@@ -1,6 +1,4 @@
 #include "types.h"
 
-float Constants::ASTEROID_SCALE = 0.3f;
-float Constants::SHIP_SCALE = 0.3f;
-int Constants::BULLET_WIDTH = 2;
-int Constants::THETA_INCR = 3;
+int32_t Constants::DEFAULT_RULE = 30;
+uint32_t Constants::BLOCK_SIZE = 30;

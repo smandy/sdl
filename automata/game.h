@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <functional>
+#include "automata.h"
 
 class Game {
   SDL_Renderer *renderer;
@@ -22,6 +23,8 @@ public:
   bool running;
 
     bool gui_visible;
+
+    Automata automata;
 
   void on_timer(uint32_t interval);
 };

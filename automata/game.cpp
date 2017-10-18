@@ -81,14 +81,14 @@ void Game::draw() {
   if (gui_visible) {
     ImGui_ImplSdlGL2_NewFrame(window);
     ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
-    ImGui::Begin("Asteroid controls");
-    ImGui::Text("Have a play.");
-    ImGui::SliderFloat("ship scale", &Constants::SHIP_SCALE, 0.2f, 1.0f,
-                       "ship scale = %.3f");
-    ImGui::SliderFloat("asteroid scale", &Constants::ASTEROID_SCALE, 0.2f, 1.0f,
-                       "asteroid scale = %.3f");
-    ImGui::SliderInt("bullet size", &Constants::BULLET_WIDTH, 1, 20, nullptr);
-    ImGui::SliderInt("theta incr", &Constants::THETA_INCR, 1, 10, nullptr);
+    ImGui::Begin("Automata controls");
+    //ImGui::Text("Have a play.");
+    // ImGui::SliderFloat("ship scale", &Constants::SHIP_SCALE, 0.2f, 1.0f,
+    //                    "ship scale = %.3f");
+    // ImGui::SliderFloat("asteroid scale", &Constants::ASTEROID_SCALE, 0.2f, 1.0f,
+    //                    "asteroid scale = %.3f");
+    ImGui::SliderInt("rule", &automata.rule, 1, 256, "%d");
+    //ImGui::SliderInt("", &Constants::THETA_INCR, 1, 10, nullptr);
     ImGui::End();
     glUseProgram(0);
     ImGui::Render();
