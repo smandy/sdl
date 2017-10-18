@@ -3,7 +3,7 @@
 #include <iostream>
 
 Automata::Automata()
-    : size_x { 80}, size_y { 80 },
+    : size_x { 80 }, size_y { 80 },
       rule{Constants::DEFAULT_RULE} {
           std::vector<uint8_t> row(size_x);
           for(int i = 0;i<size_y;++i) {
@@ -16,9 +16,8 @@ Automata::Automata()
               for (int j = 0;j<size_x;++j) {
                   auto bitpos = pr[(j + 1) % size_x] + pr[j] * 2 + pr[(j-1) % size_x ] * 4;
                   //std::cout  << "Bit pos is " << bitpos << std::endl;
-                  row[j] = (rule & ( 1 << bitpos) ) == 0 ? 0 : 1;
+                  row[j] = (rule & (1 << bitpos) ) >> bitpos;
                   //std::cout << "Row val is " << std::to_string(row[j]) << std::endl;
               };
-              //break;
           };
       };

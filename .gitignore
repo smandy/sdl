@@ -32,3 +32,5 @@ i
 /b2d/main
 asteroids/CMakeFiles
 /automata/imgui.ini
+/automata/main
+/automata/test_automata
