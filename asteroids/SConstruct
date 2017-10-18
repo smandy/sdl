@@ -3,18 +3,20 @@ env = Environment(LIBS=['SDLmain', 'SDL2', 'dl', 'GL'],
                   LIBPATH = ['/usr/lib/x86_64-linux-gnu'],
                   CPPPATH=['/usr/include/SDL2'])
 
-game = env.Object('game.cpp')
-field = env.Object('field.cpp')
-imgui_demo = env.Object('imgui_demo.cpp')
-imgui_draw = env.Object('imgui_draw.cpp')
-imgui = env.Object('imgui.cpp')
-imgui_impl_sdl = env.Object('imgui_impl_sdl.cpp')
-gl3w =  env.Object('GL/gl3w.c')
-types = env.Object('types.cpp')
+objects = [env.Object("%s.cpp" % x) for x in ['game','field','imgui_demo','imgui_draw','imgui','imgui_impl_sdl', 'types', 'main' ] ]
+gl3w = env.Object('GL/gl3w.c')
 
-main = env.Program('main' , ['main.cpp',game, field, imgui, imgui_demo, imgui_draw, gl3w, imgui_impl_sdl, types] )
+# game = env.Object('game.cpp')
+# field = env.Object('field.cpp')
+# imgui_demo = env.Object('imgui_demo.cpp')
+# imgui_draw = env.Object('imgui_draw.cpp')
+# imgui = env.Object('imgui.cpp')
+# imgui_impl_sdl = env.Object('imgui_impl_sdl.cpp')
+# gl3w =  env.Object('GL/gl3w.c')
+# types = env.Object('types.cpp')
 
-#example = env.Program('example', ['example.cpp', imgui, imgui_demo, imgui_draw, gl3w, imgui_impl_sdl_gl3] )
+main = env.Program('main' , objects + [gl3w])
+
 
 
 
