@@ -5,7 +5,7 @@ env = Environment(LIBS=['SDLmain', 'SDL2', 'dl', 'GL'],
 cenv = env.Clone(CPPFLAGS = ['--std=c++1y'])
 
 
-objects = [cenv.Object("%s.cpp" % x) for x in ['game','field','imgui_demo','imgui_draw','imgui','imgui_impl_sdl', 'types', 'main' ] ]
+objects = [cenv.Object("%s.cpp" % x) for x in ['game','imgui_demo','imgui_draw','imgui','imgui_impl_sdl', 'types', 'main' ] ]
 gl3w = env.Object('GL/gl3w.c')
 
 main = env.Program('main' , objects + [gl3w])

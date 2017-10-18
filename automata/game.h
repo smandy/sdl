@@ -21,5 +21,7 @@ public:
   bool game_running;
   bool running;
 
+    bool gui_visible;
+
   void on_timer(uint32_t interval);
 };
