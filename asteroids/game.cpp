@@ -105,7 +105,7 @@ void Game::run() {
       ImGui::SliderInt("bullet size", &Constants::BULLET_WIDTH, 1, 20, nullptr);
       ImGui::SliderInt("theta incr", &Constants::THETA_INCR, 1, 10, nullptr);
       ImGui::End();
-    };
+    }
 
     glUseProgram(0);
     ImGui::Render();
@@ -128,7 +128,7 @@ void Game::process_input_events() {
 
   if (keys[SDL_SCANCODE_RIGHT]) {
     f.theta += Constants::THETA_INCR * DEGREE_TO_RADIAN;
-  };
+  }
 
   if (keys[SDL_SCANCODE_LCTRL]) {
     auto dv = std::polar(0.2f, f.theta);
@@ -136,10 +136,9 @@ void Game::process_input_events() {
     // std::cout << "dv is " << dv << std::endl;
     // std::cout << "Velocity now " << f.entities[SHIP_ID].velocity <<
     // std::endl;
-  };
+  }
 
   if (haveEvent) {
-
     if (gui) {
       ImGui_ImplSdlGL2_ProcessEvent(&event);
     }
@@ -168,7 +167,7 @@ void Game::process_input_events() {
     }
     if (event.type == SDL_KEYUP) {
       // std::cout << "WOot - key up" << std::endl;
-    };
+    }
 
     if (event.type == SDL_KEYDOWN && game_running) {
       switch (event.key.keysym.sym) {
