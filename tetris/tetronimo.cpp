@@ -13,7 +13,7 @@ Tetronimo::Tetronimo(const char *data) : _data{} {
   }
 }
 
-Tetronimo Tetronimo::rotate() {
+Tetronimo Tetronimo::rotate() const {
   Tetronimo ret;
   for (int i = 0; i < 4; ++i) {
     for (int j = 0; j < 4; ++j) {
