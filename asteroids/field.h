@@ -2,7 +2,7 @@
 
 #include "math.h"
 #include "types.h"
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <array>
 #include <cstdint>
 #include <vector>
@@ -48,6 +48,7 @@ struct Field {
   void draw(SDL_Renderer *renderer);
   void handle_bullets();
 
+    
   void update_state();
 
   void apply_motion();

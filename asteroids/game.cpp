@@ -8,7 +8,7 @@
 #include "GL/gl3w.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 uint32_t my_timer_func(uint32_t interval, void *ctx) {
   // std::cout << "My Timer" << std::endl;

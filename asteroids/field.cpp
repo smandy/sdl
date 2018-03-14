@@ -4,7 +4,7 @@
 #include <array>
 #include <vector>
 
-#include "SDL.h"
+#include "SDL2/SDL.h"
 #include <iostream>
 #include <math.h>
 #include "assert.h"
