@@ -188,17 +188,16 @@ void Game::draw_block_transparent(int y, int x) {
 
   for (uint8_t x : {0, 3}) {
     points[x].x = r.x;
-  };
-
+  }
   for (uint8_t x : {0, 1}) {
     points[x].y = r.y;
-  };
+  }
   for (uint8_t x : {1, 2}) {
     points[x].x = r.x + BLOCK_SIZE - 2;
-  };
+  }
   for (uint8_t x : {2, 3}) {
     points[x].y = r.y + BLOCK_SIZE - 2;
-  };
+  }
   points[4] = points[0];
   SDL_RenderDrawLines(renderer, points.data(), 5);
 }
@@ -214,7 +213,7 @@ void Game::draw_block_filled(int y, int x) {
 bool Game::can_move_to(const Tetronimo &z, uint8_t y, uint8_t x) {
   auto ret = w.in_well(z, y, x) && !w.collides(z, y, x);
   return ret;
-};
+}
 
 void Game::run() {
   running = true;
@@ -285,7 +284,7 @@ void Game::process_input_events() {
         if (show_periodic_table)
           ++offset_y;
         if (antigravity) {
-            if (can_move_to(t(), ty + 1, tx)) {
+          if (can_move_to(t(), ty + 1, tx)) {
             ty += 1;
           }
         } else {
