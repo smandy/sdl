@@ -57,7 +57,7 @@ public:
 
   bool antigravity;
 
-  bool check_rows();
+  void check_rows();
   bool check_rows_impl();
   bool check_autofill();
 };

@@ -59,7 +59,7 @@ void Game::init_tetr() {
   }
 }
 
-const Tetronimo& Game::t() { return Tetronimo::tetronimos[tetr][rot]; };
+const Tetronimo &Game::t() { return Tetronimo::tetronimos[tetr][rot]; };
 
 Game::Game()
     : t_idx{}, offset_x{6}, offset_y{4}, show_periodic_table{false},
@@ -316,7 +316,7 @@ void Game::process_input_events() {
   }
 }
 
-bool Game::check_rows() {
+void Game::check_rows() {
   while (true) {
     if (!check_rows_impl())
       break;
@@ -367,10 +367,12 @@ bool Game::check_autofill() {
 bool Game::down_impl() {
   if (can_move_to(t(), ty - 1, tx)) {
     ty -= 1;
+    return true;
   } else {
     w.place(t(), ty, tx, tetr);
     check_rows();
     init_tetr();
+    return false;
   }
 }
 
