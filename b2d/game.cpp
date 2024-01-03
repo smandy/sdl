@@ -1,11 +1,14 @@
-c#include "game.h"
+#include "game.h"
 
-#include "Box2D/Box2D.h"
+#include "box2d/box2d.h"
 #include <SDL.h>
 #include <algorithm>
 #include <functional>
 #include <iostream>
 #include <numeric>
+#include <stdfloat>
+#include <iostream>
+#include "pretty_printer.hpp"
 
 
 uint32_t my_timer_func(uint32_t interval, void *ctx) {
@@ -119,7 +122,7 @@ void Game::run() {
   // Prepare for simulation. Typically we use a time step of 1/60 of a
   // second (60Hz) and 10 iterations. This provides a high quality simulation
   // in most game scenarios.
-  float32 timeStep = 1.0f / 60.0f;
+  float timeStep = 1.0f / 60.0f;
   int32 velocityIterations = 6;
   int32 positionIterations = 2;
 
@@ -137,7 +140,7 @@ void Game::run() {
 
     // Now print the position and angle of the body.
     b2Vec2 position = body->GetPosition();
-    float32 angle = body->GetAngle();
+    float angle = body->GetAngle();
 
     // printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
@@ -148,6 +151,10 @@ void Game::run() {
     r.y = 800 - 200 * position.y;
     r.w = 30;
     r.h = 30;
+    {
+        auto tmp = std::make_tuple(r.x, r.y, r.w, r.h);
+        std::cout << tmp << std::endl;
+    }
     SDL_RenderFillRect(renderer, &r);
     SDL_RenderPresent(renderer);
 

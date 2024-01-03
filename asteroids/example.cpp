@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 
+
 int main (int argc, char **argv)
 {
     // Setup SDL
@@ -39,7 +40,7 @@ int main (int argc, char **argv)
     SDL_Renderer * renderer = SDL_CreateRenderer(window, oglIdx, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); 
 
     // Setup ImGui binding
-    ImGui_ImplSdl_Init(window);
+    ImGui_ImplSdlGL2_Init(window);
 
     glewExperimental = true;
     glewInit ();
@@ -59,12 +60,12 @@ int main (int argc, char **argv)
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
-            ImGui_ImplSdl_ProcessEvent(&event);
+            ImGui_ImplSdlGL2_ProcessEvent(&event);
             if (event.type == SDL_QUIT)
                 done = true;
         }
 
-        ImGui_ImplSdl_NewFrame(window);
+        ImGui_ImplSdlGL2_NewFrame(window);
 
         // 1. Show a simple window
         // Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
@@ -121,7 +122,7 @@ int main (int argc, char **argv)
     }
 
     // Cleanup
-    ImGui_ImplSdl_Shutdown();
+    ImGui_ImplSdlGL2_Shutdown();
     SDL_DestroyTexture(bitmapTex);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

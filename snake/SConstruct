@@ -1,8 +1,9 @@
 
 env = Environment(LIBS=['SDLmain', 'SDL2'] ,
-    CPPFLAGS=['-std=c++1y', '-g'],
-                  LIBPATH = ['/usr/lib/x86_64-linux-gnu'],
-                  CPPPATH=['/usr/include/SDL2'])
+    CPPFLAGS=['-std=c++23', '-g'],
+                  #LIBPATH = ['/usr/lib/x86_64-linux-gnu'],
+                  #CPPPATH=['/usr/include/SDL2']
+                  )
 
 game = env.Object('game.cpp')
 arena = env.Object('arena.cpp')

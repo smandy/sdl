@@ -15,7 +15,8 @@ Vortex::Vortex() : myVec{} {
     std::cout << "Error initializing sdl " << SDL_GetError() << std::endl;
     exit(1);
   }
-  window = SDL_CreateWindow("Vortex", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+  window =
+      SDL_CreateWindow("Vortex", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                        1000, 1000, SDL_WINDOW_SHOWN);
 
   if (!window) {

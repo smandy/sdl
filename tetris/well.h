@@ -1,8 +1,8 @@
 #pragma once
 
 #include <array>
-
 #include "tetronimo.h"
+#include <cstdint>
 
 struct Well {
   static constexpr int WIDTH = 10;

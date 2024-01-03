@@ -6,7 +6,7 @@ env = Environment(LIBS=['SDLmain', 'SDL2'] ,
 game = env.Object('game.cpp')
 
 box2env = env.Clone()
-box2env.Append( LIBS=['Box2D'])
+box2env.Append( LIBS=['box2d'])
 
 main = box2env.Program('main' , ['main.cpp',game])
 

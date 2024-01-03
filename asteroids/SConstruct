@@ -1,10 +1,16 @@
-env = Environment(LIBS=['SDLmain', 'SDL2', 'dl', 'GL'],
+env = Environment(LIBS=['SDL2main',
+                        'SDL2',
+                        'dl',
+                        'GL',
+                        'GLEW'],
                   CPPFLAGS=['-std=c++1y', '-g'])
 
 objects = [env.Object("%s.cpp" % x) for x in ['game','field','imgui_demo','imgui_draw','imgui','imgui_impl_sdl', 'types', 'main' ] ]
 gl3w = env.Object('GL/gl3w.c')
 
 main = env.Program('main' , objects + [gl3w])
+
+example = env.Program('example' , ['example.cpp', 'imgui_demo','imgui_draw','imgui','imgui_impl_sdl'] )
 
 
 

@@ -93,8 +93,8 @@ void Game::run() {
     }
 
     if (show_ctrl) {
-      ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
-      ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_FirstUseEver);
+        //ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
+        //ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_FirstUseEver);
       ImGui::Begin("Asteroid controls");
       ImGui::Text("Have a play.");
 
@@ -149,6 +149,7 @@ void Game::process_input_events() {
       }
       case SDLK_h: {
         gui = !gui;
+        std::cout << "WOot2" << (gui ? "true" : "false") << std::endl;
         break;
       }
       case SDLK_w: {
