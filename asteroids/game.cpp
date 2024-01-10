@@ -89,7 +89,7 @@ void Game::run() {
     ImGui_ImplSdlGL2_NewFrame(window);
 
     if (gui) {
-      ImGui::ShowTestWindow();
+      ImGui::ShowDemoWindow();
     }
 
     if (show_ctrl) {
