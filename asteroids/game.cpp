@@ -108,29 +108,13 @@ Game::Game()
   SDL_Quit();
 }
 
-void Game::maybe_show_controls() {
-  if (show_ctrl) {
-    // ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
-    // ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_FirstUseEver);
-    ImGui::Begin("Asteroid controls");
-    ImGui::Text("Have a play.");
-
-    ImGui::SliderFloat("ship scale", &Constants::SHIP_SCALE, 0.2f, 1.0f,
-                       "ship scale = %.3f");
-    ImGui::SliderFloat("asteroid scale", &Constants::ASTEROID_SCALE, 0.2f, 1.0f,
-                       "asteroid scale = %.3f");
-    ImGui::SliderInt("bullet size", &Constants::BULLET_WIDTH, 1, 20, nullptr);
-    ImGui::SliderInt("theta incr", &Constants::THETA_INCR, 1, 10, nullptr);
-    ImGui::End();
-  }
-};
 
 void Game::run() {
   while (running) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
       ImGui_ImplSDL2_ProcessEvent(&event);
-      process_input_events(event);
+      //process_input_events(event);
       if (event.type == SDL_QUIT) {
         running = false;
         break;
@@ -149,15 +133,15 @@ void Game::run() {
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
-    if (game_running) {
-      f.update_state();
-    }
+    //if (game_running) {
+    //f.update_state();
+    //}
 
-    if (gui) {
+    if (gui || true) {
       ImGui::ShowDemoWindow();
     }
 
-    if (show_ctrl) {
+    if (show_ctrl && false ) {
       // ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
       // ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_FirstUseEver);
       ImGui::Begin("Asteroid controls");
@@ -192,6 +176,24 @@ void Game::run() {
 
     SDL_GL_SwapWindow(window);
     SDL_RenderPresent(renderer);
+  }
+};
+
+
+void Game::maybe_show_controls() {
+  if (show_ctrl) {
+    // ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
+    // ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_FirstUseEver);
+    ImGui::Begin("Asteroid controls");
+    ImGui::Text("Have a play.");
+
+    ImGui::SliderFloat("ship scale", &Constants::SHIP_SCALE, 0.2f, 1.0f,
+                       "ship scale = %.3f");
+    ImGui::SliderFloat("asteroid scale", &Constants::ASTEROID_SCALE, 0.2f, 1.0f,
+                       "asteroid scale = %.3f");
+    ImGui::SliderInt("bullet size", &Constants::BULLET_WIDTH, 1, 20, nullptr);
+    ImGui::SliderInt("theta incr", &Constants::THETA_INCR, 1, 10, nullptr);
+    ImGui::End();
   }
 };
 

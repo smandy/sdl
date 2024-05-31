@@ -34,7 +34,7 @@ example = env.Program(target='example',
                       source=['imgui/examples/example_sdl2_opengl2/main.cpp'],
                       LIBS =  astro_objects + imgui_objects + [gl3w] + env['LIBS'])
 
-main = env.Program(source = 'main.cpp' ,
+main = env.Program(target = 'main', source = ['main.cpp'],
                    LIBS = astro_objects + imgui_objects + [gl3w] + env['LIBS'])
 
 
