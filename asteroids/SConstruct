@@ -1,6 +1,5 @@
 IMGUI_HOME='/gome/andy/repos/imgui'
 
-
 env = Environment(LIBS=[#'SDL2main',
                         #'SDL2',
                         'dl',
@@ -14,23 +13,26 @@ print(f"env is {env.Dump()}")
 
 #objects = [env.Object("%s.cpp" % x) for x in ['game','field','imgui_demo','imgui_draw','imgui','imgui_impl_sdl', 'types', 'main' ] ]
 
-
 imgui              = env.Object("imgui/imgui.cpp")
 imgui_impl_sdl2    = env.Object("imgui/backends/imgui_impl_sdl2.cpp")
 imgui_impl_opengl2 = env.Object("imgui/backends/imgui_impl_opengl2.cpp")
 
 imgui_objects = [ imgui, imgui_impl_opengl2, imgui_impl_sdl2 ]
 #imgui_objects = [env.Object("%s.cpp" % x) for x in ['imgui_impl_sdl'] ]
-objects = [env.Object("%s.cpp" % x) for x in ['game','field','types', 'main' ] ]
+objects = [env.Object("%s.cpp" % x) for x in ['game','field','types' ] ]
 
 gl3w = env.Object('GL/gl3w.c')
 
 #main = env.Program('main' , objects + imgui_objects + [gl3w, 'imgui'])
 example = env.Program(target='example',
-                      source='imgui/examples/example_sdl2_opengl2/main.cpp',
+                      source=['imgui/examples/example_sdl2_opengl2/main.cpp',
+                              'imgui/imgui_demo.cpp',
+                              'imgui/imgui_draw.cpp',
+                              'imgui/imgui_tables.cpp',
+                              'imgui/imgui_widgets.cpp'],
                       LIBS =  objects + imgui_objects + [gl3w] + env['LIBS'])
 
-main = env.Program(source = 'main' , LIBS = objects + imgui_objects + [gl3w] + env['LIBS'])
+main = env.Program(source = 'main.cpp' , LIBS = objects + imgui_objects + [gl3w] + env['LIBS'])
 
 #example = env.Program('example' , ['example.cpp', 'imgui_demo','imgui_draw','imgui','imgui_impl_sdl'] )
 #example = env.Program('example' , ['example.cpp', 'imgui_demo','imgui_draw','imgui'] )
