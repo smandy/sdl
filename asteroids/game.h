@@ -18,6 +18,8 @@ public:
 
   void run();
 
+  void maybe_show_controls();
+
   void process_input_events();
 
   bool game_running;

@@ -9,7 +9,7 @@ env = Environment(LIBS=[#'SDL2main',
 
 env.ParseConfig('sdl2-config --cflags --libs')
 
-print(f"env is {env.Dump()}")
+#print(f"env is {env.Dump()}")
 
 #objects = [env.Object("%s.cpp" % x) for x in ['game','field','imgui_demo','imgui_draw','imgui','imgui_impl_sdl', 'types', 'main' ] ]
 
