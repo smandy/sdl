@@ -6,10 +6,11 @@
 #include <numeric>
 
 #include "GL/gl3w.h"
-#include "backends/imgui_impl_opengl2.h"
-#include "backends/imgui_impl_sdl2.h"
 #include "imgui.h"
+#include "imgui_impl_opengl2.h"
+#include "imgui_impl_sdl2.h"
 #include <SDL.h>
+#include <SDL_opengl.h>
 
 uint32_t my_timer_func(uint32_t interval, void *ctx) {
   // std::cout << "My Timer" << std::endl;
@@ -58,7 +59,7 @@ Game::Game()
       (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
                         SDL_WINDOW_ALLOW_HIGHDPI);
   SDL_Window *window =
-      SDL_CreateWindow("Asteroidsxo", SDL_WINDOWPOS_CENTERED,
+      SDL_CreateWindow("Asteroids", SDL_WINDOWPOS_CENTERED,
                        SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
   if (window == nullptr) {
     printf("Error: SDL_CreateWindow(): %s\n", SDL_GetError());
@@ -92,8 +93,8 @@ Game::Game()
   bool show_demo_window = true;
   bool show_another_window = false;
 
-  uint32_t delay = 400; /* To round it down to the nearest 10 ms */
-  SDL_TimerID my_timer_id = SDL_AddTimer(delay, my_timer_func, (void *)this);
+  //uint32_t delay = 400; /* To round it down to the nearest 10 ms */
+  //SDL_TimerID my_timer_id = SDL_AddTimer(delay, my_timer_func, (void *)this);
 
   // Main loop
   run();
@@ -126,13 +127,10 @@ void Game::maybe_show_controls() {
 
 void Game::run() {
   while (running) {
-
     SDL_Event event;
-
     while (SDL_PollEvent(&event)) {
-
       ImGui_ImplSDL2_ProcessEvent(&event);
-
+      process_input_events(event);
       if (event.type == SDL_QUIT) {
         running = false;
         break;
@@ -143,69 +141,66 @@ void Game::run() {
         running = false;
         break;
       }
-
-      if (game_running) {
-        f.update_state();
-      }
-
-      // SDL_RenderPresent(renderer);
-      // ImGui_ImplSDL2_NewFrame();
-      ImGui_ImplOpenGL2_NewFrame();
-      ImGui_ImplSDL2_NewFrame();
-      ImGui::NewFrame();
-
-      if (gui) {
-        ImGui::ShowDemoWindow();
-      }
-
-      if (show_ctrl) {
-        // ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
-        // ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_FirstUseEver);
-        ImGui::Begin("Asteroid controls");
-        ImGui::Text("Have a play.");
-
-        ImGui::SliderFloat("ship scale", &Constants::SHIP_SCALE, 0.2f, 1.0f,
-                           "ship scale = %.3f");
-        ImGui::SliderFloat("asteroid scale", &Constants::ASTEROID_SCALE, 0.2f,
-                           1.0f, "asteroid scale = %.3f");
-        ImGui::SliderInt("bullet size", &Constants::BULLET_WIDTH, 1, 20,
-                         nullptr);
-        ImGui::SliderInt("theta incr", &Constants::THETA_INCR, 1, 10, nullptr);
-        ImGui::End();
-      }
-
-      process_input_events(event);
-
-      f.draw(renderer);
-
-      // glUseProgram(0);
-      ImGui::Render();
-      //      ImGuiIO &io = ImGui::GetIO();
-      //      (void)io;
-      //      io.ConfigFlags |=
-      //          ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-      //      io.ConfigFlags |=
-           //          ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
-
-      glViewport(0, 0, (int)io->DisplaySize.x, (int)io->DisplaySize.y);
-      glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w,
-                   clear_color.z * clear_color.w, clear_color.w);
-      glClear(GL_COLOR_BUFFER_BIT);
-      // ImGui_ImplA5_RenderDrawData(ImGui::GetDrawData());
-
-      ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
-      SDL_GL_SwapWindow(window);
-      // SDL_RenderPresent(renderer);
     }
-  };
-  SDL_Quit();
-}
+
+    // SDL_RenderPresent(renderer);
+    // ImGui_ImplSDL2_NewFrame();
+    ImGui_ImplOpenGL2_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+
+    if (game_running) {
+      f.update_state();
+    }
+
+    if (gui) {
+      ImGui::ShowDemoWindow();
+    }
+
+    if (show_ctrl) {
+      // ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
+      // ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_FirstUseEver);
+      ImGui::Begin("Asteroid controls");
+      ImGui::Text("Have a play.");
+
+      ImGui::SliderFloat("ship scale", &Constants::SHIP_SCALE, 0.2f, 1.0f,
+                         "ship scale = %.3f");
+      ImGui::SliderFloat("asteroid scale", &Constants::ASTEROID_SCALE, 0.2f,
+                         1.0f, "asteroid scale = %.3f");
+      ImGui::SliderInt("bullet size", &Constants::BULLET_WIDTH, 1, 20, nullptr);
+      ImGui::SliderInt("theta incr", &Constants::THETA_INCR, 1, 10, nullptr);
+      ImGui::End();
+    }
+
+    // glUseProgram(0);
+    ImGui::Render();
+    //      ImGuiIO &io = ImGui::GetIO();
+    //      (void)io;
+    //      io.ConfigFlags |=
+    //          ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+    //      io.ConfigFlags |=
+    //          ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
+
+    //std::cout << " io is " << io << std::endl;
+    //glViewport(0, 0, (int)io->DisplaySize.x, (int)io->DisplaySize.y);
+    //    glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w,
+    //                 clear_color.z * clear_color.w, clear_color.w);
+    //glClear(GL_COLOR_BUFFER_BIT);
+
+    //f.draw(renderer);
+    ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+
+    SDL_GL_SwapWindow(window);
+    SDL_RenderPresent(renderer);
+  }
+};
+
 
 void Game::on_timer(uint32_t interval) {}
 
 void Game::process_input_events(SDL_Event &event) {
   bool keyDown = false;
-  int haveEvent = SDL_PollEvent(&event);
+  // int haveEvent = SDL_PollEvent(&event);
 
   auto keys = SDL_GetKeyboardState(nullptr);
 
@@ -225,9 +220,9 @@ void Game::process_input_events(SDL_Event &event) {
     // std::endl;
   }
 
-  if (gui) {
-    ImGui_ImplSDL2_ProcessEvent(&event);
-  }
+  // // if (gui) {
+  // //   ImGui_ImplSDL2_ProcessEvent(&event);
+  //}
   if (event.type == SDL_KEYDOWN) {
     switch (event.key.keysym.sym) {
     case SDLK_r: {
@@ -253,7 +248,7 @@ void Game::process_input_events(SDL_Event &event) {
     }
   }
   if (event.type == SDL_KEYUP) {
-    // std::cout << "WOot - key up" << std::endl;
+    std::cout << "WOot - key up" << std::endl;
   }
 
   if (event.type == SDL_KEYDOWN && game_running) {
