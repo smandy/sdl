@@ -6,6 +6,7 @@
 #include "tetronimo.h"
 #include "well.h"
 #include <functional>
+#include <random>
 
 class Game {
   static constexpr int BLOCK_SIZE = 30;
@@ -18,6 +19,10 @@ class Game {
   int t_idx;
   int offset_x;
   int offset_y;
+
+    std::random_device rd;
+    std::mt19937 g;
+
 
 public:
   Game();

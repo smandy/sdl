@@ -36,3 +36,5 @@ asteroids/CMakeFiles
 /automata/test_automata
 /asteroids/example
 *.cpp#
+/asteroids/core
+/asteroids/core.zst

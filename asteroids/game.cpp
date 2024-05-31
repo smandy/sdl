@@ -7,8 +7,9 @@
 
 #include "GL/gl3w.h"
 #include "imgui.h"
-#include "imgui_impl_sdl.h"
-#include <SDL2/SDL.h>
+#include "backends/imgui_impl_sdl2.h"
+#include "backends/imgui_impl_opengl2.h"
+#include <SDL.h>
 
 uint32_t my_timer_func(uint32_t interval, void *ctx) {
   // std::cout << "My Timer" << std::endl;
@@ -27,7 +28,10 @@ uint32_t my_timer_func(uint32_t interval, void *ctx) {
   return interval;
 }
 
-Game::~Game() { ImGui_ImplSdlGL2_Shutdown(); };
+Game::~Game() {
+    ImGui_ImplOpenGL2_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+};
 
 Game::Game() : game_running{true}, running{true}, gui{false}, show_ctrl{false} {
 
@@ -61,8 +65,17 @@ Game::Game() : game_running{true}, running{true}, gui{false}, show_ctrl{false} {
   SDL_GetCurrentDisplayMode(0, &current);
 
   SDL_GLContext glcontext = SDL_GL_CreateContext(window);
-  gl3wInit();
-  ImGui_ImplSdlGL2_Init(window);
+  //ImGui::SetCurrentContext(glcontext);
+  //gl3wInit();
+  SDL_GL_MakeCurrent(window, glcontext);
+  SDL_GL_SetSwapInterval(1); // Enable vsync
+  
+  
+  ImGui::CreateContext();
+  ImGui_ImplSDL2_InitForOpenGL(window, glcontext);
+  ImGui_ImplOpenGL2_Init();
+  
+  //ImGui_ImplSdlGL2_Init(window);
 
   // std::cout << "Woot" << std::endl;
   if (!renderer) {
@@ -86,7 +99,10 @@ void Game::run() {
 
     f.draw(renderer);
     // SDL_RenderPresent(renderer);
-    ImGui_ImplSdlGL2_NewFrame(window);
+    //ImGui_ImplSDL2_NewFrame();
+    ImGui_ImplOpenGL2_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
 
     if (gui) {
       ImGui::ShowDemoWindow();
@@ -109,6 +125,7 @@ void Game::run() {
 
     glUseProgram(0);
     ImGui::Render();
+    //ImGui_ImplA5_RenderDrawData(ImGui::GetDrawData());    
     SDL_RenderPresent(renderer);
   }
   SDL_Quit();
@@ -140,7 +157,7 @@ void Game::process_input_events() {
 
   if (haveEvent) {
     if (gui) {
-      ImGui_ImplSdlGL2_ProcessEvent(&event);
+      ImGui_ImplSDL2_ProcessEvent(&event);
     }
     if (event.type == SDL_KEYDOWN) {
       switch (event.key.keysym.sym) {

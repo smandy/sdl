@@ -5,6 +5,7 @@
 #include <functional>
 #include <iostream>
 #include <numeric>
+#include <random>
 
 // Our coordinate system
 // row major.e
@@ -31,19 +32,20 @@ void Game::init_tetr() {
   game_running = false;
   std::vector<uint8_t> perms(Tetronimo::tetronimos.size());
   std::iota(std::begin(perms), std::end(perms), 0);
-  std::random_shuffle(std::begin(perms), std::end(perms));
+
+  std::shuffle(std::begin(perms), std::end(perms), g);
   while (!perms.empty() && !game_running) {
     tetr = perms.back();
     perms.pop_back();
     std::vector<uint8_t> rots(4);
     std::iota(std::begin(rots), std::end(rots), 0);
-    std::random_shuffle(rots.begin(), rots.end());
+    std::shuffle(rots.begin(), rots.end(), g);
     while (!rots.empty() && !game_running) {
       rot = rots.back();
       rots.pop_back();
       std::vector<uint8_t> xs(Well::WIDTH);
       std::iota(std::begin(xs), std::end(xs), 0);
-      std::random_shuffle(std::begin(xs), std::end(xs));
+      std::shuffle(std::begin(xs), std::end(xs), g);
       while (!xs.empty() && !game_running) {
         tx = xs.back();
         xs.pop_back();
@@ -63,7 +65,7 @@ const Tetronimo &Game::t() { return Tetronimo::tetronimos[tetr][rot]; };
 
 Game::Game()
     : t_idx{}, offset_x{6}, offset_y{4}, show_periodic_table{false},
-      antigravity(false), game_running{true} {
+      antigravity(false), game_running{true}, g{rd()} {
   init_tetr();
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
     std::cout << "Error initializing sdl " << SDL_GetError() << std::endl;
