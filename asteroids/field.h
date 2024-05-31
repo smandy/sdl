@@ -56,7 +56,7 @@ struct Field {
 
   void draw_ship(SDL_Renderer *renderer);
   void draw_bullets(SDL_Renderer *renderer);
-  void draw_asteroid(SDL_Renderer *renderer, Asteroid &);
+  void draw_asteroid(SDL_Renderer *renderer, const Asteroid &);
 
   std::vector<Asteroid> asteroids;
 

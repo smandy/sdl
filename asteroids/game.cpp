@@ -33,7 +33,9 @@ Game::~Game() {
   ImGui_ImplSDL2_Shutdown();
 };
 
-Game::Game() : game_running{true}, running{true}, gui{false}, show_ctrl{false} {
+Game::Game()
+    : game_running{true}, running{true}, gui{false}, show_ctrl{false},
+      clear_color{0.45f, 0.55f, 0.60f, 1.00f} {
   // Setup SDL
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) !=
       0) {
@@ -70,6 +72,7 @@ Game::Game() : game_running{true}, running{true}, gui{false}, show_ctrl{false} {
   // Setup Dear ImGui context
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
+
   ImGuiIO &io = ImGui::GetIO();
   (void)io;
   io.ConfigFlags |=
@@ -88,11 +91,10 @@ Game::Game() : game_running{true}, running{true}, gui{false}, show_ctrl{false} {
   // Our state
   bool show_demo_window = true;
   bool show_another_window = false;
-  ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
   uint32_t delay = 400; /* To round it down to the nearest 10 ms */
   SDL_TimerID my_timer_id = SDL_AddTimer(delay, my_timer_func, (void *)this);
-  
+
   // Main loop
   run();
   // Cleanup
@@ -124,148 +126,164 @@ void Game::maybe_show_controls() {
 
 void Game::run() {
   while (running) {
-    process_input_events();
 
-    if (game_running) {
-      f.update_state();
+    SDL_Event event;
+
+    while (SDL_PollEvent(&event)) {
+      if (game_running) {
+        f.update_state();
+      }
+
+      // SDL_RenderPresent(renderer);
+      // ImGui_ImplSDL2_NewFrame();
+      ImGui_ImplOpenGL2_NewFrame();
+      ImGui_ImplSDL2_NewFrame();
+      ImGui::NewFrame();
+
+      if (gui) {
+        ImGui::ShowDemoWindow();
+      }
+
+      if (show_ctrl) {
+        // ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
+        // ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_FirstUseEver);
+        ImGui::Begin("Asteroid controls");
+        ImGui::Text("Have a play.");
+
+        ImGui::SliderFloat("ship scale", &Constants::SHIP_SCALE, 0.2f, 1.0f,
+                           "ship scale = %.3f");
+        ImGui::SliderFloat("asteroid scale", &Constants::ASTEROID_SCALE, 0.2f,
+                           1.0f, "asteroid scale = %.3f");
+        ImGui::SliderInt("bullet size", &Constants::BULLET_WIDTH, 1, 20,
+                         nullptr);
+        ImGui::SliderInt("theta incr", &Constants::THETA_INCR, 1, 10, nullptr);
+        ImGui::End();
+      }
+
+      process_input_events(event);
+
+      f.draw(renderer);
+
+      // glUseProgram(0);
+      ImGui::Render();
+      ImGuiIO &io = ImGui::GetIO();
+      (void)io;
+      io.ConfigFlags |=
+          ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+      io.ConfigFlags |=
+          ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
+
+      glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+      glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w,
+                   clear_color.z * clear_color.w, clear_color.w);
+      glClear(GL_COLOR_BUFFER_BIT);
+      // ImGui_ImplA5_RenderDrawData(ImGui::GetDrawData());
+
+      ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+      SDL_GL_SwapWindow(window);
+      // SDL_RenderPresent(renderer);
     }
-
-    f.draw(renderer);
-    // SDL_RenderPresent(renderer);
-    // ImGui_ImplSDL2_NewFrame();
-    ImGui_ImplOpenGL2_NewFrame();
-    ImGui_ImplSDL2_NewFrame();
-    ImGui::NewFrame();
-
-    if (gui) {
-      ImGui::ShowDemoWindow();
-    }
-
-    if (show_ctrl) {
-      // ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
-      // ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_FirstUseEver);
-      ImGui::Begin("Asteroid controls");
-      ImGui::Text("Have a play.");
-
-      ImGui::SliderFloat("ship scale", &Constants::SHIP_SCALE, 0.2f, 1.0f,
-                         "ship scale = %.3f");
-      ImGui::SliderFloat("asteroid scale", &Constants::ASTEROID_SCALE, 0.2f,
-                         1.0f, "asteroid scale = %.3f");
-      ImGui::SliderInt("bullet size", &Constants::BULLET_WIDTH, 1, 20, nullptr);
-      ImGui::SliderInt("theta incr", &Constants::THETA_INCR, 1, 10, nullptr);
-      ImGui::End();
-    }
-
-    glUseProgram(0);
-    ImGui::Render();
-    // ImGui_ImplA5_RenderDrawData(ImGui::GetDrawData());
-    SDL_RenderPresent(renderer);
-  }
+  };
   SDL_Quit();
-};
+}
 
 void Game::on_timer(uint32_t interval) {}
 
-void Game::process_input_events() {
-  uint32_t lastEvent;
+void Game::process_input_events(SDL_Event &event) {
   bool keyDown = false;
-  SDL_Event event;
   int haveEvent = SDL_PollEvent(&event);
 
-  if (haveEvent) {
+  auto keys = SDL_GetKeyboardState(nullptr);
 
-    auto keys = SDL_GetKeyboardState(nullptr);
+  if (keys[SDL_SCANCODE_LEFT]) {
+    f.theta -= Constants::THETA_INCR * DEGREE_TO_RADIAN;
+  }
 
-    if (keys[SDL_SCANCODE_LEFT]) {
-      f.theta -= Constants::THETA_INCR * DEGREE_TO_RADIAN;
+  if (keys[SDL_SCANCODE_RIGHT]) {
+    f.theta += Constants::THETA_INCR * DEGREE_TO_RADIAN;
+  }
+
+  if (keys[SDL_SCANCODE_LCTRL]) {
+    auto dv = std::polar(0.2f, f.theta);
+    f.entities[SHIP_ID].velocity += dv;
+    // std::cout << "dv is " << dv << std::endl;
+    // std::cout << "Velocity now " << f.entities[SHIP_ID].velocity <<
+    // std::endl;
+  }
+
+  if (gui) {
+    ImGui_ImplSDL2_ProcessEvent(&event);
+  }
+  if (event.type == SDL_KEYDOWN) {
+    switch (event.key.keysym.sym) {
+    case SDLK_r: {
+      break;
     }
-
-    if (keys[SDL_SCANCODE_RIGHT]) {
-      f.theta += Constants::THETA_INCR * DEGREE_TO_RADIAN;
+    case SDLK_h: {
+      gui = !gui;
+      std::cout << "WOot2" << (gui ? "true" : "false") << std::endl;
+      break;
     }
-
-    if (keys[SDL_SCANCODE_LCTRL]) {
-      auto dv = std::polar(0.2f, f.theta);
-      f.entities[SHIP_ID].velocity += dv;
-      // std::cout << "dv is " << dv << std::endl;
-      // std::cout << "Velocity now " << f.entities[SHIP_ID].velocity <<
-      // std::endl;
+    case SDLK_w: {
+      show_ctrl = !show_ctrl;
+      break;
     }
-
-    if (gui) {
-      ImGui_ImplSDL2_ProcessEvent(&event);
+    case SDLK_p: {
+      game_running = !game_running;
+      break;
     }
-    if (event.type == SDL_KEYDOWN) {
-      switch (event.key.keysym.sym) {
-      case SDLK_r: {
-        break;
-      }
-      case SDLK_h: {
-        gui = !gui;
-        std::cout << "WOot2" << (gui ? "true" : "false") << std::endl;
-        break;
-      }
-      case SDLK_w: {
-        show_ctrl = !show_ctrl;
-        break;
-      }
-      case SDLK_p: {
-        game_running = !game_running;
-        break;
-      }
-      case SDLK_ESCAPE: {
-        running = false;
-        break;
-      }
-      }
-    }
-    if (event.type == SDL_KEYUP) {
-      // std::cout << "WOot - key up" << std::endl;
-    }
-
-    if (event.type == SDL_KEYDOWN && game_running) {
-      switch (event.key.keysym.sym) {
-      case SDLK_RETURN: {
-        // std::cout << "Fire bullet" << std::endl;
-        f.fire_bullet();
-        break;
-      }
-      case SDLK_SPACE: {
-        break;
-      }
-      case SDLK_p: {
-        break;
-      }
-      case SDLK_a: {
-        break;
-      }
-      case SDLK_n: {
-        break;
-      }
-      case SDLK_RIGHT: {
-        // f.theta += 5 * DEGREE_TO_RADIAN;
-        break;
-      }
-      case SDLK_LCTRL: {
-      }
-
-      case SDLK_LEFT: {
-        // f.theta -= 5 * DEGREE_TO_RADIAN;
-      }
-      case SDLK_UP: {
-      }
-      case SDLK_DOWN:
-        break;
-      }
-    }
-
-    if (event.type == SDL_QUIT) {
+    case SDLK_ESCAPE: {
       running = false;
+      break;
+    }
+    }
+  }
+  if (event.type == SDL_KEYUP) {
+    // std::cout << "WOot - key up" << std::endl;
+  }
+
+  if (event.type == SDL_KEYDOWN && game_running) {
+    switch (event.key.keysym.sym) {
+    case SDLK_RETURN: {
+      // std::cout << "Fire bullet" << std::endl;
+      f.fire_bullet();
+      break;
+    }
+    case SDLK_SPACE: {
+      break;
+    }
+    case SDLK_p: {
+      break;
+    }
+    case SDLK_a: {
+      break;
+    }
+    case SDLK_n: {
+      break;
+    }
+    case SDLK_RIGHT: {
+      // f.theta += 5 * DEGREE_TO_RADIAN;
+      break;
+    }
+    case SDLK_LCTRL: {
     }
 
-    if (event.type == SDL_USEREVENT) {
-      reinterpret_cast<Game *>(event.user.data1)
-          ->on_timer(reinterpret_cast<size_t>(event.user.data2));
+    case SDLK_LEFT: {
+      // f.theta -= 5 * DEGREE_TO_RADIAN;
     }
+    case SDLK_UP: {
+    }
+    case SDLK_DOWN:
+      break;
+    }
+  }
+
+  if (event.type == SDL_QUIT) {
+    running = false;
+  }
+
+  if (event.type == SDL_USEREVENT) {
+    reinterpret_cast<Game *>(event.user.data1)
+        ->on_timer(reinterpret_cast<size_t>(event.user.data2));
   }
 }

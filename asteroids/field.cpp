@@ -117,9 +117,9 @@ void Field::draw(SDL_Renderer *renderer) {
   draw_ship(renderer);
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
   draw_bullets(renderer);
-
-  std::for_each(std::begin(asteroids), std::end(asteroids),
-                [&renderer, this](auto &d) { draw_asteroid(renderer, d); });
+  for( auto &d : asteroids) {
+      draw_asteroid(renderer, d);
+  }
 }
 
 template <typename T> struct TR;
@@ -130,7 +130,7 @@ void Field::draw_bullets(SDL_Renderer *renderer) {
   Vec2 offset = { - Constants::BULLET_WIDTH / 2.0f, -Constants::BULLET_WIDTH / 2.0f };
   //Vec2 offset = 
   rects.clear();
-  for (auto &x : bullets) {
+  for (const auto &x : bullets) {
     auto &entity = entities[x.entity_id];
     // TR<decltype(&entity.position)> fail;
     to_point(entity.position + offset , r);
@@ -139,7 +139,7 @@ void Field::draw_bullets(SDL_Renderer *renderer) {
   SDL_RenderFillRects(renderer, rects.data(), rects.size());
 }
 
-void Field::draw_asteroid(SDL_Renderer *renderer, Asteroid &d) {
+void Field::draw_asteroid(SDL_Renderer *renderer, const Asteroid &d) {
   // std::cout << "Drawing " << id << std::endl;
   // for( auto& x : points) {
   //   std::cout << x << std::endl;
