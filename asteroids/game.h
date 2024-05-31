@@ -30,6 +30,7 @@ public:
   bool show_ctrl;
 
   ImVec4 clear_color;
+    ImGuiIO *io;
 
   void on_timer(uint32_t interval);
 

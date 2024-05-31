@@ -58,7 +58,7 @@ Game::Game()
       (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
                         SDL_WINDOW_ALLOW_HIGHDPI);
   SDL_Window *window =
-      SDL_CreateWindow("Dear ImGui SDL2+OpenGL example", SDL_WINDOWPOS_CENTERED,
+      SDL_CreateWindow("Asteroidsxo", SDL_WINDOWPOS_CENTERED,
                        SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
   if (window == nullptr) {
     printf("Error: SDL_CreateWindow(): %s\n", SDL_GetError());
@@ -73,11 +73,11 @@ Game::Game()
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
 
-  ImGuiIO &io = ImGui::GetIO();
-  (void)io;
-  io.ConfigFlags |=
+  io = &ImGui::GetIO();
+  //(void)io;
+  io->ConfigFlags |=
       ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-  io.ConfigFlags |=
+  io->ConfigFlags |=
       ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
 
   // Setup Dear ImGui style
@@ -130,6 +130,20 @@ void Game::run() {
     SDL_Event event;
 
     while (SDL_PollEvent(&event)) {
+
+      ImGui_ImplSDL2_ProcessEvent(&event);
+
+      if (event.type == SDL_QUIT) {
+        running = false;
+        break;
+      }
+      if (event.type == SDL_WINDOWEVENT &&
+          event.window.event == SDL_WINDOWEVENT_CLOSE &&
+          event.window.windowID == SDL_GetWindowID(window)) {
+        running = false;
+        break;
+      }
+
       if (game_running) {
         f.update_state();
       }
@@ -166,14 +180,14 @@ void Game::run() {
 
       // glUseProgram(0);
       ImGui::Render();
-      ImGuiIO &io = ImGui::GetIO();
-      (void)io;
-      io.ConfigFlags |=
-          ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-      io.ConfigFlags |=
-          ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
+      //      ImGuiIO &io = ImGui::GetIO();
+      //      (void)io;
+      //      io.ConfigFlags |=
+      //          ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+      //      io.ConfigFlags |=
+           //          ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
 
-      glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+      glViewport(0, 0, (int)io->DisplaySize.x, (int)io->DisplaySize.y);
       glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w,
                    clear_color.z * clear_color.w, clear_color.w);
       glClear(GL_COLOR_BUFFER_BIT);
