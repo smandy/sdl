@@ -64,11 +64,14 @@ Game::Game()
     std::cout << "Window create okay" << std::endl;
   };
 
+  renderer = SDL_CreateRenderer(
+      window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  
   gl_context = SDL_GL_CreateContext(window);
   SDL_GL_MakeCurrent(window, gl_context);
   SDL_GL_SetSwapInterval(1); // Enable vsync
 
-  // Setup Dear ImGui context
+  // Setup Dear ImGui contextrende
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
 
@@ -136,9 +139,9 @@ void Game::run() {
     ImGui_ImplOpenGL2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
-    // if (game_running) {
-    // f.update_state();
-    // }
+    if (game_running) {
+        f.update_state();
+    }
 
     if (gui || true) {
       ImGui::ShowDemoWindow();
