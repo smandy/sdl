@@ -38,3 +38,4 @@ asteroids/CMakeFiles
 *.cpp#
 /asteroids/core
 /asteroids/core.zst
+/asteroids/sdlGlExample

@@ -76,5 +76,11 @@
         "directory": "/home/andy/repos/sdl/asteroids",
         "file": "main.cpp",
         "output": "main.o"
+    },
+    {
+        "command": "g++ -o sdlGlExample.o -c -g -Wall -I./imgui -I./imgui/backends -D_REENTRANT -I/usr/include/SDL2 sdlGlExample.cpp",
+        "directory": "/home/andy/repos/sdl/asteroids",
+        "file": "sdlGlExample.cpp",
+        "output": "sdlGlExample.o"
     }
 ]

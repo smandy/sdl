@@ -31,8 +31,8 @@ public:
 
   ImVec4 clear_color;
 
-    SDL_GLContext gl_context;
-    //ImGuiIO *io;
+  SDL_GLContext gl_context;
+  // ImGuiIO *io;
 
   void on_timer(uint32_t interval);
 

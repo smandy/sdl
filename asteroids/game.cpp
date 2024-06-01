@@ -12,6 +12,23 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 
+
+// At initialization:
+//   call ImGui::CreateContext()
+//   call ImGui_ImplXXXX_Init() for each backend.
+// 
+// At the beginning of your frame:
+//   call ImGui_ImplXXXX_NewFrame() for each backend.
+//   call ImGui::NewFrame()
+// 
+// At the end of your frame:
+//   call ImGui::Render()
+//   call ImGui_ImplXXXX_RenderDrawData() for your Renderer backend.
+// 
+// At shutdown:
+//   call ImGui_ImplXXXX_Shutdown() for each backend.
+                                           //   call ImGui::DestroyContext()
+
 uint32_t my_timer_func(uint32_t interval, void *ctx) {
   // std::cout << "My Timer" << std::endl;
   SDL_Event event;
@@ -75,6 +92,9 @@ Game::Game()
   // Setup Dear ImGui contextrende
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
+  // Setup Platform/Renderer backends
+  ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
+  ImGui_ImplOpenGL2_Init();
 
   ImGuiIO &io2 = ImGui::GetIO();
   //(void)io;
@@ -87,9 +107,6 @@ Game::Game()
   ImGui::StyleColorsDark();
   // ImGui::StyleColorsLight();
 
-  // Setup Platform/Renderer backends
-  ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
-  ImGui_ImplOpenGL2_Init();
 
   // Our state
   // bool show_demo_window = true;
@@ -136,11 +153,18 @@ void Game::run() {
       }
     }
 
+    ImGuiIO &io2 = ImGui::GetIO();
+    glViewport(0, 0, (int)io2.DisplaySize.x, (int)io2.DisplaySize.y);
+    glClearColor(clear_color.x * clear_color.w,
+                 clear_color.y * clear_color.w,
+                 clear_color.z * clear_color.w, clear_color.w);
+    //glClear(GL_COLOR_BUFFER_BIT);
     // SDL_RenderPresent(renderer);
     // ImGui_ImplSDL2_NewFrame();
     ImGui_ImplOpenGL2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
+    
     if (game_running) {
         f.update_state();
     }
@@ -150,6 +174,7 @@ void Game::run() {
     }
 
     maybe_show_controls();
+    f.draw(renderer);
 
     ImGui::Render();
 
@@ -164,16 +189,9 @@ void Game::run() {
     //          ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
 
     // std::cout << " io is " << io << std::endl;
-    ImGuiIO &io2 = ImGui::GetIO();
-    glViewport(0, 0, (int)io2.DisplaySize.x, (int)io2.DisplaySize.y);
-    glClearColor(clear_color.x * clear_color.w,
-                 clear_color.y * clear_color.w,
-                 clear_color.z * clear_color.w, clear_color.w);
-    glClear(GL_COLOR_BUFFER_BIT);
     
     ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
     SDL_RenderPresent(renderer);
-    f.draw(renderer);
     SDL_GL_SwapWindow(window);
   }
 };
