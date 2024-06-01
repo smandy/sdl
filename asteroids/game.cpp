@@ -105,7 +105,7 @@ Game::Game()
 //  run();
 // Cleanup
 Game::~Game() {
-  std::cout << "Game dtor running" << std::endl;
+    std::cout << "Game dtor running" << std::endl;
   ImGui_ImplOpenGL2_Shutdown();
   ImGui_ImplSDL2_Shutdown();
   ImGui::DestroyContext();
@@ -145,25 +145,14 @@ void Game::run() {
         f.update_state();
     }
 
-    if (gui || true) {
+    if (gui) {
       ImGui::ShowDemoWindow();
     }
+
+    maybe_show_controls();
+
     ImGui::Render();
 
-    if (show_ctrl && false) {
-      // ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
-      // ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_FirstUseEver);
-      ImGui::Begin("Asteroid controls");
-      ImGui::Text("Have a play.");
-
-      ImGui::SliderFloat("ship scale", &Constants::SHIP_SCALE, 0.2f, 1.0f,
-                         "ship scale = %.3f");
-      ImGui::SliderFloat("asteroid scale", &Constants::ASTEROID_SCALE, 0.2f,
-                         1.0f, "asteroid scale = %.3f");
-      ImGui::SliderInt("bullet size", &Constants::BULLET_WIDTH, 1, 20, nullptr);
-      ImGui::SliderInt("theta incr", &Constants::THETA_INCR, 1, 10, nullptr);
-      ImGui::End();
-    }
 
     // glUseProgram(0);
 
@@ -183,8 +172,8 @@ void Game::run() {
     glClear(GL_COLOR_BUFFER_BIT);
     
     ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
-    f.draw(renderer);
     SDL_RenderPresent(renderer);
+    f.draw(renderer);
     SDL_GL_SwapWindow(window);
   }
 };

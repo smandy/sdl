@@ -111,8 +111,8 @@ void Field::handle_bullets() {
 }
 
 void Field::draw(SDL_Renderer *renderer) {
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-  SDL_RenderClear(renderer);
+    //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    //SDL_RenderClear(renderer);
   SDL_SetRenderDrawColor(renderer, 0, 255, 255, 0);
   draw_ship(renderer);
   SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
