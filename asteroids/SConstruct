@@ -3,11 +3,11 @@ env = Environment(LIBS=[#'SDL2main',
                         'dl',
                         'GL',
                         'GLEW'],
-                  CPPFLAGS=['-g', '-I./imgui', '-I./imgui/backends'])
+                  CPPFLAGS=['-g', '-Wall', '-I./imgui', '-I./imgui/backends'])
 
 env.ParseConfig('sdl2-config --cflags --libs')
 
-print(f"env is {env.Dump()}")
+#print(f"env is {env.Dump()}")
 
 imgui              = env.Object("imgui/imgui.cpp")
 imgui_impl_sdl2    = env.Object("imgui/backends/imgui_impl_sdl2.cpp")
@@ -32,7 +32,7 @@ gl3w = env.Object('GL/gl3w.c')
 #main = env.Program('main' , astro_objects + imgui_astro_objects + [gl3w, 'imgui'])
 example = env.Program(target='example',
                       source=['imgui/examples/example_sdl2_opengl2/main.cpp'],
-                      LIBS =  astro_objects + imgui_objects + [gl3w] + env['LIBS'])
+                      LIBS =  imgui_objects + [gl3w] + env['LIBS'])
 
 main = env.Program(target = 'main', source = ['main.cpp'],
                    LIBS = astro_objects + imgui_objects + [gl3w] + env['LIBS'])

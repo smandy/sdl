@@ -5,7 +5,7 @@
 #include <iostream>
 #include <numeric>
 
-#include "GL/gl3w.h"
+// #include "GL/gl3w.h"
 #include "imgui.h"
 #include "imgui_impl_opengl2.h"
 #include "imgui_impl_sdl2.h"
@@ -29,11 +29,6 @@ uint32_t my_timer_func(uint32_t interval, void *ctx) {
   return interval;
 }
 
-Game::~Game() {
-  ImGui_ImplOpenGL2_Shutdown();
-  ImGui_ImplSDL2_Shutdown();
-};
-
 Game::Game()
     : game_running{true}, running{true}, gui{false}, show_ctrl{false},
       clear_color{0.45f, 0.55f, 0.60f, 1.00f} {
@@ -42,6 +37,8 @@ Game::Game()
       0) {
     printf("Error: %s\n", SDL_GetError());
     throw std::runtime_error("SDL_GetError()");
+  } else {
+    std::cout << "Init okay" << std::endl;
   }
 
   // From 2.0.18: Enable native IME.
@@ -58,15 +55,16 @@ Game::Game()
   SDL_WindowFlags window_flags =
       (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
                         SDL_WINDOW_ALLOW_HIGHDPI);
-  SDL_Window *window =
-      SDL_CreateWindow("Asteroids", SDL_WINDOWPOS_CENTERED,
-                       SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+  window = SDL_CreateWindow("Asteroids", SDL_WINDOWPOS_CENTERED,
+                            SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
   if (window == nullptr) {
     printf("Error: SDL_CreateWindow(): %s\n", SDL_GetError());
     throw std::runtime_error(SDL_GetError());
-  }
+  } else {
+    std::cout << "Window create okay" << std::endl;
+  };
 
-  SDL_GLContext gl_context = SDL_GL_CreateContext(window);
+  gl_context = SDL_GL_CreateContext(window);
   SDL_GL_MakeCurrent(window, gl_context);
   SDL_GL_SetSwapInterval(1); // Enable vsync
 
@@ -74,11 +72,11 @@ Game::Game()
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
 
-  io = &ImGui::GetIO();
+  ImGuiIO &io2 = ImGui::GetIO();
   //(void)io;
-  io->ConfigFlags |=
+  io2.ConfigFlags |=
       ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-  io->ConfigFlags |=
+  io2.ConfigFlags |=
       ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
 
   // Setup Dear ImGui style
@@ -90,15 +88,20 @@ Game::Game()
   ImGui_ImplOpenGL2_Init();
 
   // Our state
-  bool show_demo_window = true;
-  bool show_another_window = false;
+  // bool show_demo_window = true;
+  // bool show_another_window = false;
 
-  //uint32_t delay = 400; /* To round it down to the nearest 10 ms */
-  //SDL_TimerID my_timer_id = SDL_AddTimer(delay, my_timer_func, (void *)this);
+  std::cout << "Game ctor exiting" << std::endl;
+}
 
-  // Main loop
-  run();
-  // Cleanup
+// uint32_t delay = 400; /* To round it down to the nearest 10 ms */
+// SDL_TimerID my_timer_id = SDL_AddTimer(delay, my_timer_func, (void *)this);
+
+// Main loop
+//  run();
+// Cleanup
+Game::~Game() {
+  std::cout << "Game dtor running" << std::endl;
   ImGui_ImplOpenGL2_Shutdown();
   ImGui_ImplSDL2_Shutdown();
   ImGui::DestroyContext();
@@ -106,24 +109,25 @@ Game::Game()
   SDL_GL_DeleteContext(gl_context);
   SDL_DestroyWindow(window);
   SDL_Quit();
+  std::cout << "Game dtor exiting" << std::endl;
 }
 
-
 void Game::run() {
+  ImVec4 clear_color2 = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
   while (running) {
+    // std::cout << "Loop" << std::endl;
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
+      // std::cout << " event!" << std::endl;
       ImGui_ImplSDL2_ProcessEvent(&event);
-      //process_input_events(event);
+      // process_input_events(event);
       if (event.type == SDL_QUIT) {
         running = false;
-        break;
       }
       if (event.type == SDL_WINDOWEVENT &&
           event.window.event == SDL_WINDOWEVENT_CLOSE &&
           event.window.windowID == SDL_GetWindowID(window)) {
         running = false;
-        break;
       }
     }
 
@@ -132,16 +136,16 @@ void Game::run() {
     ImGui_ImplOpenGL2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
-
-    //if (game_running) {
-    //f.update_state();
-    //}
+    // if (game_running) {
+    // f.update_state();
+    // }
 
     if (gui || true) {
       ImGui::ShowDemoWindow();
     }
+    ImGui::Render();
 
-    if (show_ctrl && false ) {
+    if (show_ctrl && false) {
       // ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
       // ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_FirstUseEver);
       ImGui::Begin("Asteroid controls");
@@ -157,7 +161,7 @@ void Game::run() {
     }
 
     // glUseProgram(0);
-    ImGui::Render();
+
     //      ImGuiIO &io = ImGui::GetIO();
     //      (void)io;
     //      io.ConfigFlags |=
@@ -165,20 +169,19 @@ void Game::run() {
     //      io.ConfigFlags |=
     //          ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
 
-    //std::cout << " io is " << io << std::endl;
-    //glViewport(0, 0, (int)io->DisplaySize.x, (int)io->DisplaySize.y);
-    //    glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w,
-    //                 clear_color.z * clear_color.w, clear_color.w);
-    //glClear(GL_COLOR_BUFFER_BIT);
-
-    //f.draw(renderer);
+    // std::cout << " io is " << io << std::endl;
+    ImGuiIO &io2 = ImGui::GetIO();
+    glViewport(0, 0, (int)io2.DisplaySize.x, (int)io2.DisplaySize.y);
+    glClearColor(clear_color2.x * clear_color2.w,
+                 clear_color2.y * clear_color2.w,
+                 clear_color2.z * clear_color2.w, clear_color2.w);
+    glClear(GL_COLOR_BUFFER_BIT);
+    // f.draw(renderer);
     ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
-
     SDL_GL_SwapWindow(window);
-    SDL_RenderPresent(renderer);
+    // SDL_RenderPresent(renderer);
   }
 };
-
 
 void Game::maybe_show_controls() {
   if (show_ctrl) {
@@ -197,11 +200,10 @@ void Game::maybe_show_controls() {
   }
 };
 
-
 void Game::on_timer(uint32_t interval) {}
 
 void Game::process_input_events(SDL_Event &event) {
-  bool keyDown = false;
+  // bool keyDown = false;
   // int haveEvent = SDL_PollEvent(&event);
 
   auto keys = SDL_GetKeyboardState(nullptr);
