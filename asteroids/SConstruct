@@ -40,6 +40,8 @@ main = env.Program(target = 'main', source = ['main.cpp'],
                    LIBS = astro_objects + imgui_objects + [gl3w] + env['LIBS'])
 sdlGlExample = env.Program(source = ['sdlGlExample.cpp'],
                    LIBS = ['GL'] + env['LIBS'])
+chatGptExample = env.Program(source = ['chatGptExample.cpp'])
+chatGptExample2 = env.Program(source = ['chatGptExample2.cpp'])
 
 
 

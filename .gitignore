@@ -39,3 +39,6 @@ asteroids/CMakeFiles
 /asteroids/core
 /asteroids/core.zst
 /asteroids/sdlGlExample
+/asteroids/chatGptExample
+/asteroids/chatGptExample2
+/asteroids/compile_commands.json

@@ -104,7 +104,7 @@ Game::Game()
       ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
 
   // Setup Dear ImGui style
-  ImGui::StyleColorsDark();
+  //ImGui::StyleColorsDark();
   // ImGui::StyleColorsLight();
 
 
@@ -140,8 +140,8 @@ void Game::run() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
       // std::cout << " event!" << std::endl;
-      ImGui_ImplSDL2_ProcessEvent(&event);
       process_input_events(event);
+      ImGui_ImplSDL2_ProcessEvent(&event);
       // process_input_events(event);
       if (event.type == SDL_QUIT) {
         running = false;
@@ -152,9 +152,11 @@ void Game::run() {
         running = false;
       }
     }
-
+    
+    SDL_RenderClear(renderer);
     ImGuiIO &io2 = ImGui::GetIO();
     glViewport(0, 0, (int)io2.DisplaySize.x, (int)io2.DisplaySize.y);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     glClearColor(clear_color.x * clear_color.w,
                  clear_color.y * clear_color.w,
                  clear_color.z * clear_color.w, clear_color.w);
