@@ -3,7 +3,7 @@ env = Environment(LIBS=[#'SDL2main',
                         'dl',
                         'GL',
                         'GLEW'],
-                  CPPFLAGS=['-g', '-Wall', '-I./imgui', '-I./imgui/backends'])
+                  CPPFLAGS=['-g', '--std=c++23', '-Wall', '-I./imgui', '-I./imgui/backends'])
 
 env.ParseConfig('sdl2-config --cflags --libs')
 env.Tool('compilation_db')

@@ -10,11 +10,7 @@
 #include <SDL_opengl.h>
 #include <SDL_events.h>
 #include <cstdint>
-#include <cstddef>
-#include <memory>
-
-
-
+#include <format>
 // At initialization:
 //   call ImGui::CreateContext()
 //   call ImGui_ImplXXXX_Init() for each backend.
@@ -52,12 +48,12 @@ auto my_timer_func(uint32_t interval, void *ctx) -> uint32_t {
 
 Game::Game()
     : game_running{true}, running{true}, gui{false}, show_ctrl{false},
-      clear_color{0.0f, 0.0f, 0.60f, 1.00f} {
+      clear_color{0.0, 0.0, 0.60, 1.00} {
   // Setup SDL
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) !=
       0) {
-    printf("Error: %s\n", SDL_GetError());
-    throw std::runtime_error("SDL_GetError()");
+      std::cout << std::format("Error: {}\n", SDL_GetError());
+      throw std::runtime_error(std::format("SDL_GetError() {}", SDL_GetError()));
   } else {
     std::cout << "Init okay" << std::endl;
   }
