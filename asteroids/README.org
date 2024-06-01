@@ -1,0 +1,1 @@
+clang-tidy -header-filter=.* game.cpp -- -Wall -I./imgui -I./imgui/backends -D_REENTRANT -I/usr/include/SDL2

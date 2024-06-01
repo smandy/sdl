@@ -52,7 +52,7 @@ Game::Game()
   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-  SDL_WindowFlags window_flags =
+  SDL_WindowFlags window_flags = 
       (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
                         SDL_WINDOW_ALLOW_HIGHDPI);
   window = SDL_CreateWindow("Asteroids", SDL_WINDOWPOS_CENTERED,

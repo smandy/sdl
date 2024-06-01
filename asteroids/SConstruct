@@ -6,6 +6,8 @@ env = Environment(LIBS=[#'SDL2main',
                   CPPFLAGS=['-g', '-Wall', '-I./imgui', '-I./imgui/backends'])
 
 env.ParseConfig('sdl2-config --cflags --libs')
+env.Tool('compilation_db')
+env.CompilationDatabase()
 
 #print(f"env is {env.Dump()}")
 

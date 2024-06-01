@@ -1,0 +1,80 @@
+[
+    {
+        "command": "g++ -o imgui/imgui.o -c -g -Wall -I./imgui -I./imgui/backends -D_REENTRANT -I/usr/include/SDL2 imgui/imgui.cpp",
+        "directory": "/home/andy/repos/sdl/asteroids",
+        "file": "imgui/imgui.cpp",
+        "output": "imgui/imgui.o"
+    },
+    {
+        "command": "g++ -o imgui/backends/imgui_impl_sdl2.o -c -g -Wall -I./imgui -I./imgui/backends -D_REENTRANT -I/usr/include/SDL2 imgui/backends/imgui_impl_sdl2.cpp",
+        "directory": "/home/andy/repos/sdl/asteroids",
+        "file": "imgui/backends/imgui_impl_sdl2.cpp",
+        "output": "imgui/backends/imgui_impl_sdl2.o"
+    },
+    {
+        "command": "g++ -o imgui/backends/imgui_impl_opengl2.o -c -g -Wall -I./imgui -I./imgui/backends -D_REENTRANT -I/usr/include/SDL2 imgui/backends/imgui_impl_opengl2.cpp",
+        "directory": "/home/andy/repos/sdl/asteroids",
+        "file": "imgui/backends/imgui_impl_opengl2.cpp",
+        "output": "imgui/backends/imgui_impl_opengl2.o"
+    },
+    {
+        "command": "g++ -o imgui/imgui_demo.o -c -g -Wall -I./imgui -I./imgui/backends -D_REENTRANT -I/usr/include/SDL2 imgui/imgui_demo.cpp",
+        "directory": "/home/andy/repos/sdl/asteroids",
+        "file": "imgui/imgui_demo.cpp",
+        "output": "imgui/imgui_demo.o"
+    },
+    {
+        "command": "g++ -o imgui/imgui_draw.o -c -g -Wall -I./imgui -I./imgui/backends -D_REENTRANT -I/usr/include/SDL2 imgui/imgui_draw.cpp",
+        "directory": "/home/andy/repos/sdl/asteroids",
+        "file": "imgui/imgui_draw.cpp",
+        "output": "imgui/imgui_draw.o"
+    },
+    {
+        "command": "g++ -o imgui/imgui_tables.o -c -g -Wall -I./imgui -I./imgui/backends -D_REENTRANT -I/usr/include/SDL2 imgui/imgui_tables.cpp",
+        "directory": "/home/andy/repos/sdl/asteroids",
+        "file": "imgui/imgui_tables.cpp",
+        "output": "imgui/imgui_tables.o"
+    },
+    {
+        "command": "g++ -o imgui/imgui_widgets.o -c -g -Wall -I./imgui -I./imgui/backends -D_REENTRANT -I/usr/include/SDL2 imgui/imgui_widgets.cpp",
+        "directory": "/home/andy/repos/sdl/asteroids",
+        "file": "imgui/imgui_widgets.cpp",
+        "output": "imgui/imgui_widgets.o"
+    },
+    {
+        "command": "g++ -o game.o -c -g -Wall -I./imgui -I./imgui/backends -D_REENTRANT -I/usr/include/SDL2 game.cpp",
+        "directory": "/home/andy/repos/sdl/asteroids",
+        "file": "game.cpp",
+        "output": "game.o"
+    },
+    {
+        "command": "g++ -o field.o -c -g -Wall -I./imgui -I./imgui/backends -D_REENTRANT -I/usr/include/SDL2 field.cpp",
+        "directory": "/home/andy/repos/sdl/asteroids",
+        "file": "field.cpp",
+        "output": "field.o"
+    },
+    {
+        "command": "g++ -o types.o -c -g -Wall -I./imgui -I./imgui/backends -D_REENTRANT -I/usr/include/SDL2 types.cpp",
+        "directory": "/home/andy/repos/sdl/asteroids",
+        "file": "types.cpp",
+        "output": "types.o"
+    },
+    {
+        "command": "gcc -o GL/gl3w.o -c -g -Wall -I./imgui -I./imgui/backends -D_REENTRANT -I/usr/include/SDL2 GL/gl3w.c",
+        "directory": "/home/andy/repos/sdl/asteroids",
+        "file": "GL/gl3w.c",
+        "output": "GL/gl3w.o"
+    },
+    {
+        "command": "g++ -o imgui/examples/example_sdl2_opengl2/main.o -c -g -Wall -I./imgui -I./imgui/backends -D_REENTRANT -I/usr/include/SDL2 imgui/examples/example_sdl2_opengl2/main.cpp",
+        "directory": "/home/andy/repos/sdl/asteroids",
+        "file": "imgui/examples/example_sdl2_opengl2/main.cpp",
+        "output": "imgui/examples/example_sdl2_opengl2/main.o"
+    },
+    {
+        "command": "g++ -o main.o -c -g -Wall -I./imgui -I./imgui/backends -D_REENTRANT -I/usr/include/SDL2 main.cpp",
+        "directory": "/home/andy/repos/sdl/asteroids",
+        "file": "main.cpp",
+        "output": "main.o"
+    }
+]
