@@ -31,7 +31,7 @@ uint32_t my_timer_func(uint32_t interval, void *ctx) {
 
 Game::Game()
     : game_running{true}, running{true}, gui{false}, show_ctrl{false},
-      clear_color{0.45f, 0.55f, 0.60f, 1.00f} {
+      clear_color{0.0f, 0.0f, 0.60f, 1.00f} {
   // Setup SDL
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) !=
       0) {
@@ -68,6 +68,7 @@ Game::Game()
       window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   
   gl_context = SDL_GL_CreateContext(window);
+  
   SDL_GL_MakeCurrent(window, gl_context);
   SDL_GL_SetSwapInterval(1); // Enable vsync
 
@@ -116,13 +117,14 @@ Game::~Game() {
 }
 
 void Game::run() {
-  ImVec4 clear_color2 = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    //ImVec4 clear_color2 = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
   while (running) {
     // std::cout << "Loop" << std::endl;
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
       // std::cout << " event!" << std::endl;
       ImGui_ImplSDL2_ProcessEvent(&event);
+      process_input_events(event);
       // process_input_events(event);
       if (event.type == SDL_QUIT) {
         running = false;
@@ -175,14 +177,15 @@ void Game::run() {
     // std::cout << " io is " << io << std::endl;
     ImGuiIO &io2 = ImGui::GetIO();
     glViewport(0, 0, (int)io2.DisplaySize.x, (int)io2.DisplaySize.y);
-    glClearColor(clear_color2.x * clear_color2.w,
-                 clear_color2.y * clear_color2.w,
-                 clear_color2.z * clear_color2.w, clear_color2.w);
+    glClearColor(clear_color.x * clear_color.w,
+                 clear_color.y * clear_color.w,
+                 clear_color.z * clear_color.w, clear_color.w);
     glClear(GL_COLOR_BUFFER_BIT);
-    // f.draw(renderer);
+    
     ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+    f.draw(renderer);
+    SDL_RenderPresent(renderer);
     SDL_GL_SwapWindow(window);
-    // SDL_RenderPresent(renderer);
   }
 };
 
@@ -265,20 +268,7 @@ void Game::process_input_events(SDL_Event &event) {
       f.fire_bullet();
       break;
     }
-    case SDLK_SPACE: {
-      break;
-    }
-    case SDLK_p: {
-      break;
-    }
-    case SDLK_a: {
-      break;
-    }
-    case SDLK_n: {
-      break;
-    }
-    case SDLK_RIGHT: {
-      // f.theta += 5 * DEGREE_TO_RADIAN;
+    case SDLK_SPACE | SDLK_p | SDLK_a | SDLK_n | SDLK_LCTRL : {
       break;
     }
     case SDLK_LCTRL: {

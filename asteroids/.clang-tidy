@@ -1,4 +1,4 @@
-#Checks: '*'
+Checks: '*'
 HeaderFilterRegex: ".*"
 WarningsAsErrors:  ''
 #HeaderFileExtensions: ['', 'h','hh','hpp','hxx']
