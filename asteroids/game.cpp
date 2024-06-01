@@ -1,9 +1,6 @@
 #include "game.h"
 
-#include <algorithm>
-#include <functional>
 #include <iostream>
-#include <numeric>
 
 // #include "GL/gl3w.h"
 #include "imgui.h"
@@ -11,6 +8,11 @@
 #include "imgui_impl_sdl2.h"
 #include <SDL.h>
 #include <SDL_opengl.h>
+#include <SDL_events.h>
+#include <cstdint>
+#include <cstddef>
+#include <memory>
+
 
 
 // At initialization:
@@ -29,17 +31,19 @@
 //   call ImGui_ImplXXXX_Shutdown() for each backend.
                                            //   call ImGui::DestroyContext()
 
-uint32_t my_timer_func(uint32_t interval, void *ctx) {
+auto my_timer_func(uint32_t interval, void *ctx) -> uint32_t {
   // std::cout << "My Timer" << std::endl;
   SDL_Event event;
   SDL_UserEvent userevent;
+
+  
   /* In this example, our callback pushes an SDL_USEREVENT event
      into the queue, and causes our callback to be called again at the
      same interval: */
   userevent.type = SDL_USEREVENT;
   userevent.code = 1;
   userevent.data1 = ctx;
-  userevent.data2 = (void *)(size_t)interval;
+
   event.type = SDL_USEREVENT;
   event.user = userevent;
   SDL_PushEvent(&event);
@@ -215,7 +219,7 @@ void Game::maybe_show_controls() {
   }
 };
 
-void Game::on_timer(uint32_t interval) {}
+void Game::on_timer() {}
 
 void Game::process_input_events(SDL_Event &event) {
   // bool keyDown = false;
@@ -299,6 +303,6 @@ void Game::process_input_events(SDL_Event &event) {
 
   if (event.type == SDL_USEREVENT) {
     reinterpret_cast<Game *>(event.user.data1)
-        ->on_timer(reinterpret_cast<size_t>(event.user.data2));
+        ->on_timer();
   }
 }

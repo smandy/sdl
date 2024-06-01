@@ -1,4 +1,50 @@
-Checks: '*'
-HeaderFilterRegex: ".*"
-WarningsAsErrors:  ''
-#HeaderFileExtensions: ['', 'h','hh','hpp','hxx']
+---
+Checks: >
+  -*,
+  clang-analyzer-*,
+  bugprone-*,
+  cppcoreguidelines-*,
+  performance-*,
+  modernize-*,
+  readability-*,
+  misc-*,
+  cert-*,
+CheckOptions:
+  - key:             readability-identifier-naming.ClassCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.MethodCase
+    value:           camelBack
+  - key:             readability-identifier-naming.VariableCase
+    value:           camelBack
+  - key:             readability-identifier-naming.ConstantCase
+    value:           UPPER_CASE
+  - key:             readability-identifier-naming.ParameterCase
+    value:           camelBack
+  - key:             readability-identifier-naming.ClassMemberCase
+    value:           camelBack
+  - key:             readability-identifier-naming.EnumCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.EnumConstantCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.GlobalConstantCase
+    value:           UPPER_CASE
+  - key:             readability-identifier-naming.NamespaceCase
+    value:           camelBack
+  - key:             modernize-use-override.OverrideSpelling
+    value:           'override'
+  - key:             modernize-use-nullptr.NullMacros
+    value:           NULL
+  - key:             modernize-use-default-member-init.IgnoreMacros
+    value:           0
+  - key:             cppcoreguidelines-owning-memory
+    value:           0
+  - key:             cppcoreguidelines-pro-bounds-array-to-pointer-decay
+    value:           0
+  - key:             cppcoreguidelines-pro-bounds-pointer-arithmetic
+    value:           0
+  - key:             cppcoreguidelines-pro-type-cstyle-cast
+    value:           0
+  - key:             cppcoreguidelines-pro-type-union-access
+    value:           0
+  - key:             cppcoreguidelines-pro-type-vararg
+    value:           0

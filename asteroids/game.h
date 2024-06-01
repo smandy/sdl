@@ -34,7 +34,7 @@ public:
   SDL_GLContext gl_context;
   // ImGuiIO *io;
 
-  void on_timer(uint32_t interval);
+  void on_timer();
 
   Field f;
 };
