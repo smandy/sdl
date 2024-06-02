@@ -217,9 +217,7 @@ void Game::onTimer() {}
 void Game::processInputEvents(SDL_Event &event) {
   // bool keyDown = false;
   // int haveEvent = SDL_PollEvent(&event);
-
   const auto *keys = SDL_GetKeyboardState(nullptr);
-
   if (bool(keys[SDL_SCANCODE_LEFT])) {
     f.theta -= Constants::THETA_INCR * DEGREE_TO_RADIAN;
   }
@@ -229,16 +227,10 @@ void Game::processInputEvents(SDL_Event &event) {
   }
 
   if (bool(keys[SDL_SCANCODE_LCTRL])) {
-    auto dv = std::polar(0.2f, f.theta);
-    f.entities[SHIP_ID].velocity += dv;
-    // std::cout << "dv is " << dv << std::endl;
-    // std::cout << "Velocity now " << f.entities[SHIP_ID].velocity <<
-    // std::endl;
+    auto deltaVee = std::polar(0.2, f.theta);
+    f.entities[SHIP_ID].velocity += deltaVee;
   }
 
-  // // if (gui) {
-  // //   ImGui_ImplSDL2_ProcessEvent(&event);
-  //}
   if (event.type == SDL_KEYDOWN) {
     switch (event.key.keysym.sym) {
     case SDLK_r: {
@@ -246,7 +238,7 @@ void Game::processInputEvents(SDL_Event &event) {
     }
     case SDLK_h: {
       gui = !gui;
-      std::cout << "WOot2" << (gui ? "true" : "false") << std::endl;
+      std::cout << "WOot2" << (gui ? "true\n" : "false\n");
       break;
     }
     case SDLK_w: {
@@ -267,30 +259,11 @@ void Game::processInputEvents(SDL_Event &event) {
     }
   }
   if (event.type == SDL_KEYUP) {
-    std::cout << "WOot - key up" << std::endl;
+      std::cout << "WOot - key up\n";
   }
 
-  if (event.type == SDL_KEYDOWN && game_running) {
-    switch (event.key.keysym.sym) {
-    case SDLK_RETURN: {
-      // std::cout << "Fire bullet" << std::endl;
+  if (event.type == SDL_KEYDOWN && game_running && event.key.keysym.sym==SDLK_RETURN) {
       f.fire_bullet();
-      break;
-    }
-    case SDLK_SPACE | SDLK_p | SDLK_a | SDLK_n | SDLK_LCTRL: {
-      break;
-    }
-    case SDLK_LCTRL: {
-    }
-
-    case SDLK_LEFT: {
-      // f.theta -= 5 * DEGREE_TO_RADIAN;
-    }
-    case SDLK_UP: {
-    }
-    case SDLK_DOWN:
-      break;
-    }
   }
 
   if (event.type == SDL_QUIT) {
@@ -298,6 +271,6 @@ void Game::processInputEvents(SDL_Event &event) {
   }
 
   if (event.type == SDL_USEREVENT) {
-    reinterpret_cast<Game *>(event.user.data1)->onTimer();
+    static_cast<Game *>(event.user.data1)->onTimer();
   }
 }
