@@ -1,3 +1,6 @@
+// Opengl free sdl2
+
+
 #include <SDL.h>
 
 // Screen dimension constants
