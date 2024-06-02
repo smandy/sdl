@@ -1,14 +1,13 @@
-#include "game.h"
+#include "game.h" 
 
 #include <iostream>
-
+  
 // #include "GL/gl3w.h"
 #include "imgui.h"
-#include "imgui_impl_opengl2.h"
 #include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer2.h"
 #include "types.h"
 #include <SDL.h>
-#include "GL/gl3w.h"
 #include <complex>
 #include <cstdint>
 #include <format>
@@ -50,9 +49,9 @@ auto my_timer_func(uint32_t interval, void *ctx) -> uint32_t {
 
 Game::Game()
     : game_running{true}, running{true}, gui{false}, show_ctrl{false},
-      clear_color{0.0, 0.0, 0.60, 1.00} {
+      clear_color{0.0, 0.0, 0.00, 1.00} {
   // Setup SDL
-  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) !=
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) !=
       0) {
     std::cout << std::format("Error: {}\n", SDL_GetError());
     throw std::runtime_error(std::format("SDL_GetError() {}", SDL_GetError()));
@@ -65,13 +64,23 @@ Game::Game()
 #endif
 
   // Setup window
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-  SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+  // // SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+  // // SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+  // // SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+  // // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+  //  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+
+  // Print the names of the available rendering drivers
+  int numRenderDrivers = SDL_GetNumRenderDrivers();  
+  for (int i = 0; i < numRenderDrivers; ++i) {
+      SDL_RendererInfo info;
+      if (SDL_GetRenderDriverInfo(i, &info) == 0) {
+          printf("Render driver %d: %s\n", i, info.name);
+      }
+  }
+  
   auto windowFlags =
-      (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
+      (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE |
                         SDL_WINDOW_ALLOW_HIGHDPI);
   window = SDL_CreateWindow("Asteroids", SDL_WINDOWPOS_CENTERED,
                             SDL_WINDOWPOS_CENTERED, 1280, 720, windowFlags);
@@ -83,18 +92,28 @@ Game::Game()
 
   renderer = SDL_CreateRenderer(
       window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  if (renderer == NULL) {
+      SDL_DestroyWindow(window);
+      SDL_Quit();
+      throw std::runtime_error( std::format("Renderer could not be created! SDL_Error: %s\n", SDL_GetError()));
+  };
+  
+  SDL_RendererInfo info;
+  if (SDL_GetRendererInfo(renderer, &info) == 0) {
+      printf("Currently using renderer: %s\n", info.name);
+  }
 
-  glContext = SDL_GL_CreateContext(window);
+  //glContext = SDL_GL_CreateContext(window);
 
-  SDL_GL_MakeCurrent(window, glContext);
-  SDL_GL_SetSwapInterval(1); // Enable vsync
+  //SDL_GL_MakeCurrent(window, glContext);
+  //SDL_GL_SetSwapInterval(1); // Enable vsync
 
   // Setup Dear ImGui contextrende
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
   // Setup Platform/Renderer backends
-  ImGui_ImplSDL2_InitForOpenGL(window, glContext);
-  ImGui_ImplOpenGL2_Init();
+  ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
+  ImGui_ImplSDLRenderer2_Init(renderer);
 
   ImGuiIO &io2 = ImGui::GetIO();
   //(void)io;
@@ -122,11 +141,11 @@ Game::Game()
 // Cleanup
 Game::~Game() {
   std::cout << "Game dtor running\n";
-  ImGui_ImplOpenGL2_Shutdown();
+  ImGui_ImplSDLRenderer2_Shutdown();
   ImGui_ImplSDL2_Shutdown();
   ImGui::DestroyContext();
 
-  SDL_GL_DeleteContext(glContext);
+  SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
   SDL_Quit();
   std::cout << "Game dtor exiting\n";
@@ -152,46 +171,34 @@ void Game::run() {
       }
     }
 
-    SDL_RenderClear(renderer);
-    const ImGuiIO &io2 = ImGui::GetIO();
-    glViewport(0, 0, (int)io2.DisplaySize.x, (int)io2.DisplaySize.y);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w,
-                 clear_color.z * clear_color.w, clear_color.w);
+    
     // glClear(GL_COLOR_BUFFER_BIT);
     //  SDL_RenderPresent(renderer);
     //  ImGui_ImplSDL2_NewFrame();
-    ImGui_ImplOpenGL2_NewFrame();
+    ImGui_ImplSDLRenderer2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
+    maybeShowControls();
+
+
+    ImGuiIO &io = ImGui::GetIO();    
+    SDL_RenderSetScale(renderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
+    SDL_SetRenderDrawColor(renderer, (Uint8)(clear_color.x * 255), (Uint8)(clear_color.y * 255), (Uint8)(clear_color.z * 255), (Uint8)(clear_color.w * 255));
+    SDL_RenderClear(renderer);
 
     if (game_running) {
       f.update_state();
     }
-
     if (gui) {
       ImGui::ShowDemoWindow();
     }
-
-    maybeShowControls();
+    ImGui::Render();
     f.draw(renderer);
 
-    ImGui::Render();
-
-    // glUseProgram(0);
-
-    //      ImGuiIO &io = ImGui::GetIO();
-    //      (void)io;
-    //      io.ConfigFlags |=
-    //          ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-    //      io.ConfigFlags |=
-    //          ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
-
-    // std::cout << " io is " << io << std::endl;
-
-    ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+    
+    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), renderer);
     SDL_RenderPresent(renderer);
-    SDL_GL_SwapWindow(window);
+    //SDL_GL_SwapWindow(window);
   }
 };
 
@@ -259,7 +266,7 @@ void Game::processInputEvents(SDL_Event &event) {
     }
   }
   if (event.type == SDL_KEYUP) {
-      std::cout << "WOot - key up\n";
+      //std::cout << "WOot - key up\n";
   }
 
   if (event.type == SDL_KEYDOWN && game_running && event.key.keysym.sym==SDLK_RETURN) {

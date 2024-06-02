@@ -13,6 +13,7 @@ env.CompilationDatabase()
 
 imgui              = env.Object("imgui/imgui.cpp")
 imgui_impl_sdl2    = env.Object("imgui/backends/imgui_impl_sdl2.cpp")
+imgui_impl_sdlrenderer2 = env.Object('imgui/backends/imgui_impl_sdlrenderer2.cpp')
 imgui_impl_opengl2 = env.Object("imgui/backends/imgui_impl_opengl2.cpp")
 imgui_demo         = env.Object("imgui/imgui_demo.cpp")
 imgui_draw         = env.Object("imgui/imgui_draw.cpp")
@@ -25,7 +26,9 @@ imgui_objects = [ imgui,
                   imgui_tables,
                   imgui_widgets,
                   imgui_impl_opengl2,
-                  imgui_impl_sdl2 ]
+                  imgui_impl_sdlrenderer2,
+                  imgui_impl_sdl2
+                 ]
 #imgui_objects = [env.Object("%s.cpp" % x) for x in ['imgui_impl_sdl'] ]
 astro_objects = [env.Object("%s.cpp" % x) for x in ['game','field','types' ] ]
 
@@ -35,6 +38,9 @@ gl3w = env.Object('GL/gl3w.c')
 example = env.Program(target='example',
                       source=['imgui/examples/example_sdl2_opengl2/main.cpp'],
                       LIBS =  imgui_objects + [gl3w] + env['LIBS'])
+
+example_sdlrenderer2 = env.Program(target = 'sdlSdlRenderer2', source = ['imgui/examples/example_sdl2_sdlrenderer2/main.cpp'],
+                   LIBS = imgui_objects + env['LIBS'])
 
 main = env.Program(target = 'main', source = ['main.cpp'],
                    LIBS = astro_objects + imgui_objects + [gl3w] + env['LIBS'])
