@@ -50,6 +50,6 @@ struct Constants {
   static float SHIP_SCALE;
   static float ASTEROID_SCALE;
   static int BULLET_WIDTH;
-  static int THETA_INCR;
+  static float THETA_INCR;
 };
 } // namespace asteroids

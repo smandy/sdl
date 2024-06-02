@@ -20,9 +20,9 @@ public:
 
   void run();
 
-  void maybe_show_controls();
+  void maybeShowControls() const;
 
-  void process_input_events(SDL_Event &event);
+  void processInputEvents(SDL_Event &event);
 
   bool game_running;
   bool running;
@@ -31,10 +31,10 @@ public:
 
   ImVec4 clear_color;
 
-  SDL_GLContext gl_context;
+   SDL_GLContext glContext;
   // ImGuiIO *io;
 
-  void on_timer();
+  void onTimer();
 
   Field f;
 };

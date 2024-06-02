@@ -9,6 +9,10 @@ Checks: >
   readability-*,
   misc-*,
   cert-*,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -readability-magic-numbers,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -misc-include-cleaner
 CheckOptions:
   - key:             readability-identifier-naming.ClassCase
     value:           CamelCase
