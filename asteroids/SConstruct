@@ -42,8 +42,3 @@ sdlGlExample = env.Program(source = ['sdlGlExample.cpp'],
                    LIBS = ['GL'] + env['LIBS'])
 chatGptExample = env.Program(source = ['chatGptExample.cpp'])
 chatGptExample2 = env.Program(source = ['chatGptExample2.cpp'])
-
-
-
-
-

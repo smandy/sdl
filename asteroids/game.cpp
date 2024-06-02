@@ -227,7 +227,7 @@ void Game::processInputEvents(SDL_Event &event) {
   }
 
   if (bool(keys[SDL_SCANCODE_LCTRL])) {
-    auto deltaVee = std::polar(0.2f, f.theta);
+    auto deltaVee = std::polar(0.2F, f.theta);
     f.entities[SHIP_ID].velocity += deltaVee;
   }
 
